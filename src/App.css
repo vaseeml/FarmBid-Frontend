@@ -36,3 +36,22 @@
     transform: rotate(360deg);
   }
 }
+
+
+/* Add this CSS in your stylesheet */
+.logo-text {
+  font-family: 'Roboto', sans-serif; /* Specify the font family */
+  font-size: 24px; /* Specify the font size */
+  font-weight: bold; /* Specify the font weight */
+  color:#0d160d; /* Specify the font color */
+  text-decoration: none; /* Remove underline */
+  letter-spacing: 1px; /* Add letter spacing */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2)
+}
+
+.logo-text:hover {
+  color:green; /* Change color on hover */
+}
+.header-bg {
+  background-color: #2B2922; /* Change to your desired background color */
+}
