@@ -10,7 +10,7 @@ export default function Header() {
 };
     return (
         <Navbar bg="success" variant="dark" expand="lg">
-            <Navbar.Brand href="#">FarmBid Connect</Navbar.Brand>
+            <Navbar.Brand><Nav.Link as={Link} to="/">FarmBid-Connect</Nav.Link></Navbar.Brand>
             <Navbar.Toggle aria-controls="navbarNav" />
             <Navbar.Collapse id="navbarNav">
                 <Nav className="ml-auto">
