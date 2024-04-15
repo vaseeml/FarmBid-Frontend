@@ -1,11 +1,16 @@
-import './App.css'
-import { Route , Routes} from 'react-router-dom'
+import {  Route , Routes} from 'react-router-dom'
 import Home from './components/pages/home/Home'
-import Login from './components/auth/Login'
 import { useEffect } from 'react'
 import {getStartProduct} from './actions/product-actions'
 import { useDispatch } from 'react-redux'
-import Header from './components/auth/Header'
+import Header from './components/headers/header'
+import LoginForm from './components/pages/registration/login'
+import RegistrationForm from './components/pages/registration/registration'
+import ForgotPassword from './components/pages/registration/forgotPassword'
+import Dashboard from './components/pages/dashboard/dashboard'
+import Orders from './components/pages/dashboard/orders'
+import Admin from './components/pages/dashboard/admin'
+import Rolebased from './components/pages/dashboard/Rolebased'
 
 function App() {
   const dispatch = useDispatch()
@@ -15,13 +20,22 @@ function App() {
     },[dispatch])
   return (
     <div className="App">
-      <Routes>
-        <Route path='/' element={<Home/>}/>
-        <Route path='/login' element={<Login/>}/>
-        <Route path='/header' element={<Header/>}/>
-      </Routes>
+        <Header />
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/loginPage" element={<LoginForm />} />
+          <Route path="/register" element={<RegistrationForm />} />
+          <Route path="/forgot-password" element={<ForgotPassword/>}/>
+          <Route path="/dashboard" element={<Dashboard/>}/>
+          <Route path="/orders" element={<Orders/>}/>
+          <Route path="/admin" element={<Admin/>}/>
+          <Route path="/login-success" element={<Rolebased/>}/>
+          <Route path="/payment-success" element={<Rolebased/>}/>
+          
+        </Routes>
+    
     </div>
   );
 }
 
-export default App;
+export default App;
