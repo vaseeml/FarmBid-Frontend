@@ -15,7 +15,7 @@ export const productReducer = (state = initialState , action)=>{
         }
         case 'SET_COMPLETED_PRODUCTS':{
             return {...state,completedProducts:action.payload}
-
+        }
         case 'SET_UPCOMING_PRODUCTS':{
             return {...state ,upcomingProducts:action.payload }
         }

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import {jwtDecode} from 'jwt-decode'; // Import the JWT decoding library
 import Dashboard from './dashboard';
 import Buyer from './buyer';
-import LiveProducts from '../live';
+import LiveProducts from '../LiveProducts';
 
 const Rolebased = () => {
     const [userRole, setUserRole] = useState(null);
