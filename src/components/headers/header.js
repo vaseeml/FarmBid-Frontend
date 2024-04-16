@@ -1,7 +1,6 @@
 import { Link,useNavigate } from 'react-router-dom';
 import { Navbar, Nav } from 'react-bootstrap';
 import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import { Navbar, Nav} from 'react-bootstrap';
 import { isEmpty } from 'lodash';
 import { useState } from 'react'
 export default function Header() {
