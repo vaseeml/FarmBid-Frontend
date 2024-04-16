@@ -26,7 +26,7 @@ const LoginForm = () => {
       console.log(response.data)
       localStorage.setItem('token',response.data.token)
       setServerErrors("")
-      navigate('/login-success')
+      window.location.reload()
     }catch(err){
       console.log(err)
       setServerErrors(err.response.data.errors)

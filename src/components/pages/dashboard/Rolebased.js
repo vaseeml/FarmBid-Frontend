@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {jwtDecode} from 'jwt-decode'; // Import the JWT decoding library
 import Dashboard from './dashboard';
-import Seller from './seller';
 import Buyer from './buyer';
 
 const Rolebased = () => {
@@ -24,8 +23,6 @@ const Rolebased = () => {
         switch (userRole) {
             case 'admin':
                 return <Dashboard/>;
-            case 'seller':
-                return <Seller/>;
             case 'buyer':
                 return <Buyer/>;
             default:

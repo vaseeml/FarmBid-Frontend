@@ -1,8 +1,13 @@
 import { Link,useNavigate } from 'react-router-dom';
 import { Navbar, Nav } from 'react-bootstrap';
+import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { isEmpty } from 'lodash';
-
+import { useState } from 'react'
 export default function Header() {
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+  
+    const toggle = () => setDropdownOpen(prevState => !prevState);
+
   const navigate=useNavigate()
   const handleLogout = () => {
     localStorage.removeItem('token')
@@ -23,6 +28,21 @@ export default function Header() {
                     <Nav.Link href="#">Service</Nav.Link>
                 </Nav>
             </Navbar.Collapse>
+            <Dropdown isOpen={dropdownOpen} toggle={toggle}>
+      <DropdownToggle >
+      ☰
+      </DropdownToggle>
+      <DropdownMenu>
+        <DropdownItem header>Choose</DropdownItem>
+        <DropdownItem>About Us</DropdownItem>
+        <DropdownItem>Report</DropdownItem>
+        <DropdownItem divider />
+        {
+            !isEmpty(localStorage.getItem('token')) &&<DropdownItem onClick={handleLogout}>Logout</DropdownItem>
+        }
+        
+      </DropdownMenu>
+    </Dropdown>
         </Navbar>
     );
 }
