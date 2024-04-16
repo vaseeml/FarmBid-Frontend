@@ -18,6 +18,7 @@ import { setTokenData } from './actions/auth-actions'
 
 import Sections from './components/headers/sections'
 import UpcomingProducts from './components/pages/UpcomingProducts'
+import LiveProducts from './components/pages/live'
 function App() {
   const auth = useSelector((state)=>{
     return state.auth.data
