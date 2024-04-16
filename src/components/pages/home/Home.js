@@ -19,14 +19,15 @@ export default function Home(){
                                 />
                             
                             <div className="card-body"><h3 className="card-title">{ele.productName}</h3>
-                            <video controls height='300px' width='260px'>
+                            {/* <video controls height='300px' width='260px'>
                                     <source
                                     key={ele._id}
                                     src={`http://localhost:3000/${ele.productVideo}`}
                                     />
-                                </video>
+                                </video> */}
                             <p className="card-text">{ele.sellerId?.phone}</p></div>
                             </div>
+                            <button className="btn btn-primary">Bid</button>
                             </div>
                     })
                 }
