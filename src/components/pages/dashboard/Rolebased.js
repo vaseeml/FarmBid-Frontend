@@ -4,6 +4,7 @@ import {jwtDecode} from 'jwt-decode'; // Import the JWT decoding library
 import Dashboard from './dashboard';
 import Seller from './seller';
 import Buyer from './buyer';
+import LiveProducts from '../live';
 
 const Rolebased = () => {
     const [userRole, setUserRole] = useState(null);
@@ -25,9 +26,9 @@ const Rolebased = () => {
             case 'admin':
                 return <Dashboard/>;
             case 'seller':
-                return <Seller/>;
+                return <LiveProducts/>;
             case 'buyer':
-                return <Buyer/>;
+                return <LiveProducts/>;
             default:
                 // Redirect to login page if role is not recognized or token is missing
                 return navigate('/loginPage')

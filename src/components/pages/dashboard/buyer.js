@@ -15,11 +15,11 @@ const Buyer = () => {
   }, []);
 
   const fetchData = async () => {
-    const response = await axios.get("http://localhost:3000/api/wallet/", {
+    const response = await axios.get("http://localhost:3000/api/wallet", {
       headers: { Authorization: localStorage.getItem("token") },
     });
     setData(response.data);
-  };
+  }
 
   const handleSubmit = async (e) => {
     try {

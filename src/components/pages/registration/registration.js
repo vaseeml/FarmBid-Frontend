@@ -52,7 +52,7 @@ export default function RegistrationForm(){
                 <label className="form-label" htmlFor="username">Username</label>
                 <Field className="form-control" name="username" type="text" id="username"/>
                 <ErrorMessage className="text-danger" component="div" name="username"/>
-                {formikProps.values.username.length==0&& <p style={{color:'red'}}>{helperFunction('username')}</p>}
+                {formikProps.values.username.length===0&& <p style={{color:'red'}}>{helperFunction('username')}</p>}
 
                 <label className="form-label" htmlFor="email">Email</label>
                 <Field className="form-control" name="email" type="text" id="email"/>
@@ -70,7 +70,7 @@ export default function RegistrationForm(){
                 <label className="form-label" htmlFor="password">Password</label>
                 <Field className="form-control" name="password" type="text" id="password"/>
                 <ErrorMessage className="text-danger" component="div" name="password"/>
-                {formikProps.values.password.length==0&& <p style={{color:'red'}}>{helperFunction('password')}</p>}
+                {formikProps.values.password.length===0&& <p style={{color:'red'}}>{helperFunction('password')}</p>}
                 <article className='indicate-warning'>
                     <p>**Password requires UpperCase, LowerCase, Digit, and Symbol, minimally.</p>
                 </article>
@@ -88,7 +88,7 @@ export default function RegistrationForm(){
                         </label>
                         </span> &nbsp;
                         <ErrorMessage className="text-danger" component="div" name="role" />
-                        {formikProps.values.role.length==0&& <p style={{color:'red'}}>{helperFunction('role')}</p>}
+                        {formikProps.values.role.length===0&& <p style={{color:'red'}}>{helperFunction('role')}</p>}
                 </div>
                 <button type="submit" className='btn btn-primary form-control'>Submit</button> <br />
                 <Link to='/loginPage'>Already have an account? Login here</Link> <br />

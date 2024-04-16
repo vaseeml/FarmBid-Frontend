@@ -9,13 +9,13 @@ const LoginForm = () => {
   const [serverErrors,setServerErrors]=useState([])
   const navigate=useNavigate()
   const initialValues = {
-    email: '',
+    loginId: '',
     password: '',
   };
 
   // Define the validation schema using Yup
   const validationSchema = Yup.object().shape({
-    email: Yup.string().required('Email is required'),
+    loginId: Yup.string().required('Email/Phone is required'),
     password: Yup.string().required('Password is required'),
   });
 
@@ -27,6 +27,7 @@ const LoginForm = () => {
       localStorage.setItem('token',response.data.token)
       setServerErrors("")
       navigate('/login-success')
+      window.location.reload()
     }catch(err){
       console.log(err)
       setServerErrors(err.response.data.errors)
@@ -46,11 +47,11 @@ const LoginForm = () => {
               <FormLabel>Email</FormLabel>
               <Field
                 type="text"
-                name="email"
-                placeholder="Enter email"
+                name="loginId"
+                placeholder="Enter email/phone"
                 as={FormControl}
               />
-              <ErrorMessage name="email" component="div" className="text-danger" />
+              <ErrorMessage name="loginId" component="div" className="text-danger" />
             </FormGroup>
 
             <FormGroup controlId="password">
