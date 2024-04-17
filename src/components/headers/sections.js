@@ -4,36 +4,43 @@ import { faWallet , faChartLine } from '@fortawesome/free-solid-svg-icons'
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
 import { Form } from 'react-bootstrap'
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { startWalletUpdate } from '../../actions/user-actions'
+import { useSelector } from 'react-redux'
 import axios from 'axios'
 export default function Sections(){
     const [modal, setModal] = useState(false);
     const [ updateAmount , setUpdateAmount ] = useState('')
-    const [ wallet , setWallet ] = useState(null)
+    const wallet = useSelector((state)=>{
+        return state.user?.wallet
+    })
     const toggle = () => {
         setModal(!modal)
     }
-    const dispatch = useDispatch()
     const handleUpdateAmount = async(e)=>{
+        // preventing page reload
         e.preventDefault()
-       dispatch(startWalletUpdate(updateAmount)) 
-    }
-    const handleWallet = async()=>{
-        const response = await axios.get('http://localhost:3000/api/wallet' , {headers:{
-            'Authorization':localStorage.getItem('token')
-        }})
-        console.log(response.data)
-        setWallet(response.data)
-        toggle()
-        
+        const formData = {
+            amount:updateAmount,
+            walletId:wallet._id
+        }
+        try{
+            // post request for making payment
+            const response = await axios.post('http://localhost:3000/api/create-checkout-session' ,formData, { headers:{
+                'Authorization':localStorage.getItem('token')
+            }})
+            // setting the localStorage stripe id with response
+            localStorage.setItem('stripeId' , response.data.id)
+            // taking to the payment page with url by stripe
+            window.location = response.data.url
+        } catch(err){
+            console.log(err)
+        }
     }
     return (
         <div className='row'>
             <div className='col-md-3'><Link to='/live'>Live</Link></div>
             <div className='col-md-3'><Link to='/upcoming'>UpComing</Link></div>
             <div className='col-md-3'><Link to='/completed'>Completed</Link></div>
-            <div onClick={handleWallet} className='col-md-2 d-flex align-items-center justify-content-end'>
+            <div onClick={toggle} className='col-md-2 d-flex align-items-center justify-content-end'>
                 <FontAwesomeIcon icon={faWallet} size="2x" color="brown" />
             </div>
             <div className='col-md-1 d-flex align-items-center'>
