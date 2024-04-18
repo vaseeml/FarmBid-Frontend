@@ -1,6 +1,6 @@
-import {  Route , Routes} from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import { useEffect } from 'react'
-import {getStartProduct,getStartLiveProducts,startGetUpComingProducts, getStartCompletedProducts} from './actions/product-actions'
+import { getStartProduct, getStartLiveProducts, startGetUpComingProducts, getStartCompletedProducts } from './actions/product-actions'
 
 import { useDispatch } from 'react-redux'
 import Home from './components/pages/home/Home'
@@ -20,12 +20,14 @@ import Sections from './components/headers/sections'
 import UpcomingProducts from './components/pages/UpcomingProducts'
 import LiveProducts from './components/pages/LiveProducts'
 import CompletedProducts from './components/pages/CompletedProducts'
+import CreateProduct from './components/pages/CreateProduct'
 import MyProduct from './components/pages/bid/MyProduct'
 import Bid from './components/pages/bid/Bid'
 import Cart from './components/pages/cart/Cart'
 import PaymentSuccess from './components/payments/PaymentSuccess'
+
 function App() {
-  const auth = useSelector((state)=>{
+  const auth = useSelector((state) => {
     return state.auth.data
   })
   const dispatch = useDispatch()
@@ -68,8 +70,9 @@ function App() {
           <Route path='/live/:id/bid' element={<Bid/>}/>
           <Route path='/cart' element={auth?.role == 'buyer' && <Cart/>}/>
           {/* <Route path='/view/:id/details' element={}/> */}
+          
+        <Route path='/create-product' element={<CreateProduct />} />
         </Routes>
-    
     </div>
   )
 }

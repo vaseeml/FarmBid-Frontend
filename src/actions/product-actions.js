@@ -1,16 +1,17 @@
 import axios from 'axios'
 
-export const getStartProduct = ()=>{
-    return async(dispatch)=>{
-        try{
+export const getStartProduct = () => {
+    return async (dispatch) => {
+        try {
             // getting the products for common users
             const response = await axios.get('http://localhost:3000/api/products')
             dispatch(setProducts(response.data))
-        }catch(err){
+        } catch (err) {
             console.log(err)
         }
     }
 }
+
 export const startGetUpComingProducts = (role)=>{
     return async(dispatch)=>{
         try{
@@ -20,18 +21,35 @@ export const startGetUpComingProducts = (role)=>{
             }})
             // console.log(response.data)
             dispatch(setUpComingProducts(response.data))
-        }catch(err){
+        } catch (err) {
             console.log(err)
         }
     }
 }
-export const setProducts = (data)=>{
-    return {
-        type:'SET_PRODUCTS',
-        payload:data
+export const startCreateProducts = (data) => {
+    return async (dispatch) => {
+        try {
+            const response = await axios.post('http://localhost:3000/api/create/product', data, {
+                headers: { 'Authorization': localStorage.getItem("token") }
+            })
+            console.log(response.data)
+            const currentTime = new Date()
+            if (new Date(response.data?.biddingStart) < currentTime) {
+                dispatch(setLiveProducts(response.data))
+            } else {
+                dispatch(setUpComingProducts(response.data))
+            }
+        } catch (err) {
+            console.log(err)
+        }
     }
 }
-
+export const setProducts = (data) => {
+    return {
+        type: 'SET_PRODUCTS',
+        payload: data
+    }
+}
 export const getStartLiveProducts=(role)=>{
     return async(dispatch)=>{
         try{
@@ -40,16 +58,16 @@ export const getStartLiveProducts=(role)=>{
                 headers:{'Authorization':localStorage.getItem('token')}
             })
             dispatch(setLiveProducts(response.data))
-        }catch(err){
+        } catch (err) {
             console.log(err)
         }
     }
 }
 
-export const setLiveProducts = (data)=>{
+export const setLiveProducts = (data) => {
     return {
-        type:'SET_LIVE_PRODUCTS',
-        payload:data
+        type: 'SET_LIVE_PRODUCTS',
+        payload: data
     }
 }
 export const getStartCompletedProducts=(role)=>{
@@ -60,21 +78,63 @@ export const getStartCompletedProducts=(role)=>{
                 headers:{'Authorization':localStorage.getItem('token')}
             })
             dispatch(setCompletedProducts(response.data))
-        }catch(err){
+        } catch (err) {
             console.log(err)
         }
     }
 }
 
-export const setCompletedProducts = (data)=>{
+export const setCompletedProducts = (data) => {
     return {
-        type:'SET_COMPLETED_PRODUCTS',
-        payload:data
+        type: 'SET_COMPLETED_PRODUCTS',
+        payload: data
     }
 }
-const setUpComingProducts = (data)=>{
+const setUpComingProducts = (data) => {
     return {
-        type:'SET_UPCOMING_PRODUCTS',
-        payload:data
+        type: 'SET_UPCOMING_PRODUCTS',
+        payload: data
+    }
+}
+
+export const setDeleteProduct = (id) => {
+    return async (dispatch) => {
+        try {
+            const response = await axios.delete(`http://localhost:3000/api/delete/${id}`, {
+                headers: { 'Authorization': localStorage.getItem("token") }
+            })
+            dispatch(deleteProduct(response.data))
+        } catch (err) {
+            console.log(err)
+        }
+    }
+}
+const deleteProduct = (data) => {
+    return {
+        type: 'DELETE_PRODUCT',
+        payload: data
+    }
+}
+export const startEditProduct = (id, formData) => {
+    return async (dispatch) => {
+        try {
+            console.log('id', id)
+            console.log('form', formData)
+            const response = await axios.put(`http://localhost:3000/api/update/${id}`, formData, {
+                headers: {
+                    'Authorization': localStorage.getItem("token"),
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            dispatch(editProduct(response.data))
+        } catch (err) {
+            console.log(err)
+        }
+    }
+}
+const editProduct = (data) => {
+    return {
+        type: 'EDIT_PRODUCT',
+        payload: data
     }
 }

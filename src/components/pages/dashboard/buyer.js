@@ -24,7 +24,7 @@ const Buyer = () => {
   const handleSubmit = async (e) => {
     try {
       const formData = {
-        walletId: "66177cfa5e551899bb2a16f4",
+        walletId: "661e1af3ab4289a363bdfa59",
         amount: number,
       };
       e.preventDefault();
