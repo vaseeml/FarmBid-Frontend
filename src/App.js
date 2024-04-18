@@ -25,7 +25,9 @@ import MyProduct from './components/pages/bid/MyProduct'
 import Bid from './components/pages/bid/Bid'
 import Cart from './components/pages/cart/Cart'
 import PaymentSuccess from './components/payments/PaymentSuccess'
-
+import { startGetWallet } from './actions/user-actions'
+import Customers from './components/pages/dashboard/Customers'
+import { startGetAllProfiles } from './actions/admin-actions'
 function App() {
   const auth = useSelector((state) => {
     return state.auth.data
@@ -43,6 +45,11 @@ function App() {
             dispatch(getStartLiveProducts(user.role))
             dispatch(getStartCompletedProducts(user.role))
             dispatch(startGetUpComingProducts(user.role))
+            // passing id is optional
+            dispatch(startGetWallet(user.id))
+          }
+          if(user.role == 'admin'){
+            dispatch(startGetAllProfiles())
           }
         }else{
           // dispatch after page is mounted
@@ -60,7 +67,8 @@ function App() {
           <Route path="/forgot-password" element={<ForgotPassword/>}/>
           <Route path="/dashboard" element={<Dashboard/>}/>
           <Route path="/orders" element={<Orders/>}/>
-          <Route path="/admin" element={<Admin/>}/>
+          <Route path="/customers" element={<Customers/>}/>
+          {/* <Route path="/sellers" element={</>}/> */}
           <Route path="/login-success" element={<Rolebased/>}/>
           <Route path="/payment-success" element={<PaymentSuccess/>}/>
           <Route path='/upcoming' element={<UpcomingProducts/>}/>

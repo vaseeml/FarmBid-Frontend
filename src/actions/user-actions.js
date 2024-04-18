@@ -19,6 +19,21 @@ export const startWalletUpdate = (stripeId)=>{
     }
 }
 
+export const startGetWallet = (id)=>{
+    // no need of id bcz backend is taking care
+    return async(dispatch)=>{
+        try{
+            const response = await axios.get('http://localhost:3000/api/wallet' , {
+                headers:{
+                    'Authorization':localStorage.getItem('token')
+                }
+            })
+            dispatch(setWallet(response.data))
+        }catch(err){
+            console.log(err)
+        }
+    }
+}
 export const setWallet = (data)=>{
     return {
         type:'SET_WALLET',

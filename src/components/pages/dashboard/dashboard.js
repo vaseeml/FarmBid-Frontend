@@ -34,9 +34,15 @@ export default function Dashboard() {
                     </a>
                 </li>
                 <li>
-                    <Link to="/admin" className="nav-link link-body-emphasis">
+                    <Link to="/customers" className="nav-link link-body-emphasis">
                         <svg className="bi pe-none me-2" width="16" height="16"><use xlinkHref="#table"></use></svg>
                         Customers
+                    </Link>
+                </li>
+                <li>
+                    <Link to="/sellers" className="nav-link link-body-emphasis">
+                        <svg className="bi pe-none me-2" width="16" height="16"><use xlinkHref="#table"></use></svg>
+                        Sellers
                     </Link>
                 </li>
             </ul>
