@@ -1,6 +1,6 @@
-import {  Route , Routes} from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import { useEffect } from 'react'
-import {getStartProduct,getStartLiveProducts,startGetUpComingProducts, getStartCompletedProducts} from './actions/product-actions'
+import { getStartProduct, getStartLiveProducts, startGetUpComingProducts, getStartCompletedProducts } from './actions/product-actions'
 
 import { useDispatch } from 'react-redux'
 import Home from './components/pages/home/Home'
@@ -20,46 +20,49 @@ import Sections from './components/headers/sections'
 import UpcomingProducts from './components/pages/UpcomingProducts'
 import LiveProducts from './components/pages/LiveProducts'
 import CompletedProducts from './components/pages/CompletedProducts'
+import CreateProduct from './components/pages/CreateProduct'
 function App() {
-  const auth = useSelector((state)=>{
+  const auth = useSelector((state) => {
     return state.auth.data
   })
   const dispatch = useDispatch()
-    useEffect(()=>{
-        // dispatch after page is mounted
-       
-        const token = localStorage.getItem('token')
-        if(token){
-          const user = jwtDecode(token)
-          dispatch(setTokenData(user))
-          if(user.role !== 'admin'){
-            dispatch(getStartLiveProducts(user.role))
-            dispatch(getStartCompletedProducts(user.role))
-            dispatch(startGetUpComingProducts(user.role))
-          }
-        }else{
-          dispatch(getStartProduct())
-        }
-    },[dispatch])
+  useEffect(() => {
+    // dispatch after page is mounted
+
+    const token = localStorage.getItem('token')
+    if (token) {
+      const user = jwtDecode(token)
+      dispatch(setTokenData(user))
+      if (user.role !== 'admin') {
+        dispatch(getStartLiveProducts(user.role))
+        dispatch(getStartCompletedProducts(user.role))
+        dispatch(startGetUpComingProducts(user.role))
+      }
+    } else {
+      dispatch(getStartProduct())
+    }
+  }, [dispatch])
   return (
     <div className="App">
-        <Header />
-        {auth.role !== 'admin' && <Sections/>}
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/loginPage" element={<LoginForm />} />
-          <Route path="/register" element={<RegistrationForm />} />
-          <Route path="/forgot-password" element={<ForgotPassword/>}/>
-          <Route path="/dashboard" element={<Dashboard/>}/>
-          <Route path="/orders" element={<Orders/>}/>
-          <Route path="/admin" element={<Admin/>}/>
-          <Route path="/login-success" element={<Rolebased/>}/>
-          <Route path="/payment-success" element={<Rolebased/>}/>
-          <Route path='/upcoming' element={<UpcomingProducts/>}/>
-          <Route path='/live' element={<LiveProducts/>}/>
-          <Route path='/completed' element={<CompletedProducts/>}/>
-        </Routes>
-    
+      <Header />
+      {auth.role !== 'admin' && <Sections />}
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/loginPage" element={<LoginForm />} />
+        <Route path="/register" element={<RegistrationForm />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/orders" element={<Orders />} />
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/login-success" element={<Rolebased />} />
+        <Route path="/payment-success" element={<Rolebased />} />
+        <Route path='/upcoming' element={<UpcomingProducts />} />
+        <Route path='/live' element={<LiveProducts />} />
+        <Route path='/completed' element={<CompletedProducts />} />
+        <Route path='/create-product' element={<CreateProduct />} />
+
+      </Routes>
+
     </div>
   )
 }

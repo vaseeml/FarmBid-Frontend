@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {jwtDecode} from 'jwt-decode'; // Import the JWT decoding library
+import { jwtDecode } from 'jwt-decode'; // Import the JWT decoding library
 import Dashboard from './dashboard';
-import Buyer from './buyer';
+
 import LiveProducts from '../LiveProducts';
+import Buyer from './buyer';
 
 const Rolebased = () => {
     const [userRole, setUserRole] = useState(null);
-    const navigate=useNavigate()
-    const token=localStorage.getItem('token')
+    const navigate = useNavigate()
+    const token = localStorage.getItem('token')
 
     useEffect(() => {
         if (token) {
@@ -16,18 +17,18 @@ const Rolebased = () => {
             const decodedToken = jwtDecode(token);
             const role = decodedToken.role;
             setUserRole(role);
-            
+
         }
     }, [token]);
 
     const renderDashboard = () => {
         switch (userRole) {
             case 'admin':
-                return <Dashboard/>;
+                return <Dashboard />;
             case 'seller':
-                return <LiveProducts/>;
+                return <LiveProducts />;
             case 'buyer':
-                return <LiveProducts/>;
+                return <Buyer />;
             default:
                 // Redirect to login page if role is not recognized or token is missing
                 return navigate('/loginPage')
