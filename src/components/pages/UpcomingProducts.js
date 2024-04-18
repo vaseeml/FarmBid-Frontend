@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios'
 import { useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { startEditProduct } from '../../actions/product-actions';
@@ -68,6 +69,30 @@ export default function UpcomingProducts() {
         dispatch(startEditProduct(editId, formData))
         toggle()
 
+    const handleClick = async(id)=>{
+        // checking the role before making api requests
+        if(auth?.role == 'buyer'){
+            try{
+                const formData = {
+                    product:id,
+                    user:auth.id
+                }
+                // if buyer add item to cart
+                const response = await axios.post('http://localhost:3000/api/cart' ,formData, {
+                    headers:{
+                        'Authorization':localStorage.getItem('token')
+                    }
+                })
+                console.log('added to cart' , response.data)
+            }catch(err){
+                console.log(err)
+            }
+        }
+        else{
+            // for a reason
+            alert('No Route Found')
+        }
+
     }
     return (
         <div>
@@ -88,7 +113,8 @@ export default function UpcomingProducts() {
                         </video> */}
                             <p className="card-text">{ele.sellerId?.phone}</p></div>
                     </div>
-                    {auth.role == 'buyer' && <button className="btn btn-primary">AddCart</button>}
+
+                    {auth.role == 'buyer' && <button className="btn btn-primary" onClick={()=>handleClick(ele._id)>AddCart</button>}
                     {auth.role == 'seller' && <button className="btn btn-primary" onClick={() => { handleEdit(ele._id) }}>Edit</button>}
                     {auth.role == 'seller' && <button className="btn btn-primary" onClick={() => { handleDelete(ele._id) }}>Delete</button>}
                 </div>

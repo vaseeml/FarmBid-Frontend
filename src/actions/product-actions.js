@@ -3,6 +3,7 @@ import axios from 'axios'
 export const getStartProduct = () => {
     return async (dispatch) => {
         try {
+            // getting the products for common users
             const response = await axios.get('http://localhost:3000/api/products')
             dispatch(setProducts(response.data))
         } catch (err) {
@@ -10,15 +11,15 @@ export const getStartProduct = () => {
         }
     }
 }
-export const startGetUpComingProducts = (role) => {
-    return async (dispatch) => {
-        try {
-            const response = await axios.get(`http://localhost:3000/api/products/upcoming?role=${role}`, {
-                headers: {
-                    'Authorization': localStorage.getItem('token')
-                }
-            })
-            console.log(response.data)
+
+export const startGetUpComingProducts = (role)=>{
+    return async(dispatch)=>{
+        try{
+            // getting upcoming products based on role
+            const response = await axios.get(`http://localhost:3000/api/products/upcoming?role=${role}` , {headers:{
+                'Authorization':localStorage.getItem('token')
+            }})
+            // console.log(response.data)
             dispatch(setUpComingProducts(response.data))
         } catch (err) {
             console.log(err)
@@ -49,12 +50,12 @@ export const setProducts = (data) => {
         payload: data
     }
 }
-
-export const getStartLiveProducts = (role) => {
-    return async (dispatch) => {
-        try {
-            const response = await axios.get(`http://localhost:3000/api/products/live?role=${role}`, {
-                headers: { 'Authorization': localStorage.getItem('token') }
+export const getStartLiveProducts=(role)=>{
+    return async(dispatch)=>{
+        try{
+            // getting live products based on role
+            const response = await axios.get(`http://localhost:3000/api/products/live?role=${role}`,{
+                headers:{'Authorization':localStorage.getItem('token')}
             })
             dispatch(setLiveProducts(response.data))
         } catch (err) {
@@ -69,11 +70,12 @@ export const setLiveProducts = (data) => {
         payload: data
     }
 }
-export const getStartCompletedProducts = (role) => {
-    return async (dispatch) => {
-        try {
-            const response = await axios.get(`http://localhost:3000/api/products/completed?role=${role}`, {
-                headers: { 'Authorization': localStorage.getItem('token') }
+export const getStartCompletedProducts=(role)=>{
+    return async(dispatch)=>{
+        try{
+            // getting completed products based on role
+            const response = await axios.get(`http://localhost:3000/api/products/completed?role=${role}`,{
+                headers:{'Authorization':localStorage.getItem('token')}
             })
             dispatch(setCompletedProducts(response.data))
         } catch (err) {

@@ -1,12 +1,21 @@
 import { useSelector } from "react-redux"
-
+import { useNavigate } from 'react-router-dom'
 export default function LiveProducts(){
+    const navigate = useNavigate()
     const products=useSelector((state)=>{
         return state.products.liveProducts
     })
     const auth=useSelector((state)=>{
         return state.auth.data
     })
+    const handleClick = async(id)=>{
+        if(auth.role == 'seller'){
+            navigate(`/live/${id}/myProduct`)
+        }
+        if(auth.role == 'buyer'){
+            navigate(`/live/${id}/bid`)
+        }
+    }
     return (
         <div>
             {products.map((ele) => (
@@ -26,7 +35,7 @@ export default function LiveProducts(){
                         </video> */}
                     <p className="card-text">{ele.sellerId?.phone}</p></div>
                     </div>
-                    <button className="btn btn-primary">{auth.role == 'buyer'?'bid':'see details'}</button>
+                    <button className="btn btn-primary" onClick={()=>handleClick(ele._id)}>{auth.role == 'buyer'?'Bid':'View Details'}</button>
                     </div>
                 ))}
         </div>
