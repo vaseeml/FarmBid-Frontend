@@ -68,7 +68,7 @@ export default function UpcomingProducts() {
         formData.append('biddingStart', form.biddingStart)
         dispatch(startEditProduct(editId, formData))
         toggle()
-
+    }
     const handleClick = async(id)=>{
         // checking the role before making api requests
         if(auth?.role == 'buyer'){
@@ -114,7 +114,7 @@ export default function UpcomingProducts() {
                             <p className="card-text">{ele.sellerId?.phone}</p></div>
                     </div>
 
-                    {auth.role == 'buyer' && <button className="btn btn-primary" onClick={()=>handleClick(ele._id)>AddCart</button>}
+                    {auth.role == 'buyer' && <button className="btn btn-primary" onClick={()=>handleClick(ele._id)}>AddCart</button>}
                     {auth.role == 'seller' && <button className="btn btn-primary" onClick={() => { handleEdit(ele._id) }}>Edit</button>}
                     {auth.role == 'seller' && <button className="btn btn-primary" onClick={() => { handleDelete(ele._id) }}>Delete</button>}
                 </div>
