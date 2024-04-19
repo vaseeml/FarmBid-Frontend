@@ -40,3 +40,9 @@ export const setWallet = (data)=>{
         payload:data
     }
 }
+export const setProfile = (data)=>{
+    return {
+        type:'SET_PROFILE',
+        payload:data
+    }
+}
