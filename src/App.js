@@ -26,8 +26,10 @@ import Bid from './components/pages/bid/Bid'
 import Cart from './components/pages/cart/Cart'
 import PaymentSuccess from './components/payments/PaymentSuccess'
 import { startGetWallet } from './actions/user-actions'
-import Customers from './components/pages/dashboard/Customers'
+import Customers from './components/pages/dashboard/customer/Customers'
 import { startGetAllProfiles } from './actions/admin-actions'
+import ViewCustomer from './components/pages/dashboard/customer/ViewCustomer'
+import ViewCustomerBids from './components/pages/dashboard/customer/ViewCustomerBids'
 function App() {
   const auth = useSelector((state) => {
     return state.auth.data
@@ -68,7 +70,6 @@ function App() {
           <Route path="/dashboard" element={<Dashboard/>}/>
           <Route path="/orders" element={<Orders/>}/>
           <Route path="/customers" element={<Customers/>}/>
-          {/* <Route path="/sellers" element={</>}/> */}
           <Route path="/login-success" element={<Rolebased/>}/>
           <Route path="/payment-success" element={<PaymentSuccess/>}/>
           <Route path='/upcoming' element={<UpcomingProducts/>}/>
@@ -77,9 +78,9 @@ function App() {
           <Route path='/live/:id/myProduct' element={<MyProduct/>}/>
           <Route path='/live/:id/bid' element={<Bid/>}/>
           <Route path='/cart' element={auth?.role == 'buyer' && <Cart/>}/>
-          {/* <Route path='/view/:id/details' element={}/> */}
-          
-        <Route path='/create-product' element={<CreateProduct />} />
+          <Route path='/view/:id/customer' element={<ViewCustomer/>}/>
+          <Route path='/customer/:id/bids' element={<ViewCustomerBids/>}/>
+          <Route path='/create-product' element={<CreateProduct />} />
         </Routes>
     </div>
   )

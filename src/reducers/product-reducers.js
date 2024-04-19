@@ -33,6 +33,28 @@ export const productReducer = (state = initialState, action) => {
                 })
             }
         }
+        case 'REMOVE_PRODUCT_FROM_UPCOMING':{
+            return {
+                ...state , upcomingProducts:state.upcomingProducts.filter((ele)=>{
+                    return ele._id !== action.payload
+                })
+            }
+        }
+        case 'REMOVE_PRODUCT_FROM_LIVE':{
+            return {
+                ...state , liveProducts:state.liveProducts.filter(ele=>ele._id !== action.payload)
+            }
+        }
+        case 'ADD_PRODUCT_TO_LIVE':{
+            return {
+                ...state , liveProducts:[...state.liveProducts , state.upcomingProducts.find(ele=>ele._id == action.payload)]
+            }
+        }
+        case 'ADD_PRODUCT_TO_COMPLETED':{
+            return {
+                ...state , completedProducts:[...state.completedProducts , state.liveProducts.find(ele=>ele._id == action.payload)]
+            }
+        }
         default: {
             return { ...state }
         }
