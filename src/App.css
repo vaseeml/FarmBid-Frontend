@@ -1,5 +1,5 @@
 .App {
-  text-align: center;
+  text-align: left;
 }
 
 .App-logo {
@@ -59,4 +59,13 @@
 .profile-icon {
   color: #007bff; /* Set the color to a blue shade */
   font-size: 2rem; /* Adjust the size of the icon */
+}
+
+
+.sidebar .nav {
+  padding:0px !important;
+}
+
+.sidebar ul li a:hover {
+  background-color: #007bff;
 }

@@ -15,7 +15,7 @@ export default function Header() {
     const handleLogout = () => {
       // remove the token if user logged out
         localStorage.removeItem('token')
-        navigate('/')
+        navigate("/")
     };
     const handleCart = ()=>{
         // taking the cart page
@@ -67,7 +67,7 @@ export default function Header() {
                 </DropdownToggle>
                 <DropdownMenu>
                     <DropdownItem header>Choose</DropdownItem>
-                    <DropdownItem>My Profile</DropdownItem>
+                    <DropdownItem><Nav.Link as={Link} to="/createProfile">My Profile</Nav.Link></DropdownItem>
                     <DropdownItem>About Us</DropdownItem>
                     <DropdownItem>Report</DropdownItem>
                     <DropdownItem divider />
