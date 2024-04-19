@@ -2,8 +2,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios'
 import { useState } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { startEditProduct } from '../../actions/product-actions';
-import { setDeleteProduct } from '../../actions/product-actions';
+import { startEditProduct , setDeleteProduct , removeProductFromUpcoming , addProductToLive } from '../../actions/product-actions';
+import CountDownTimer from './CountDownTimer';
 export default function UpcomingProducts() {
     const dispatch = useDispatch()
     const upcomingProducts = useSelector((state) => state.products?.upcomingProducts);
@@ -94,6 +94,14 @@ export default function UpcomingProducts() {
         }
 
     }
+    const onBiddingStart = (productId)=>{
+        // first adding the product to live section 
+        dispatch(addProductToLive(productId)).then(()=>{
+            // after successfully adding the product then remove product from upcoming section
+            dispatch(removeProductFromUpcoming(productId))
+        })
+        console.log(`product id:${productId} has moved from upcoming section to live section`)
+    }
     return (
         <div>
             {upcomingProducts.map((ele) => (
@@ -113,6 +121,7 @@ export default function UpcomingProducts() {
                         </video> */}
                             <p className="card-text">{ele.sellerId?.phone}</p></div>
                     </div>
+                    <CountDownTimer biddingStart={new Date(ele.biddingStart)} onBiddingStart={()=>onBiddingStart(ele._id)}/>
 
                     {auth.role == 'buyer' && <button className="btn btn-primary" onClick={()=>handleClick(ele._id)}>AddCart</button>}
                     {auth.role == 'seller' && <button className="btn btn-primary" onClick={() => { handleEdit(ele._id) }}>Edit</button>}

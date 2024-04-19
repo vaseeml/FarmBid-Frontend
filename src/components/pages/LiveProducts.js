@@ -1,7 +1,10 @@
-import { useSelector } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from 'react-router-dom'
+import CountDownTimer from "./CountDownTimer"
+import { removeProductFromLive  , addProductToCompleted} from "../../actions/product-actions"
 export default function LiveProducts(){
     const navigate = useNavigate()
+    const dispatch = useDispatch()
     const products=useSelector((state)=>{
         return state.products.liveProducts
     })
@@ -15,6 +18,13 @@ export default function LiveProducts(){
         if(auth.role == 'buyer'){
             navigate(`/live/${id}/bid`)
         }
+    }
+    const onBiddingEnd = (productId)=>{
+        console.log('onbidding end')
+        // dispatching the action after bidding time ends to remove the product from the live section
+        dispatch(addProductToCompleted(productId)).then(()=>{
+            dispatch(removeProductFromLive(productId))
+        })
     }
     return (
         <div>
@@ -34,6 +44,7 @@ export default function LiveProducts(){
                             />
                         </video> */}
                     <p className="card-text">{ele.sellerId?.phone}</p></div>
+                    {ele.biddingEnd ? <CountDownTimer biddingEnd={new Date(ele.biddingEnd)} onBiddingEnd={()=>onBiddingEnd(ele._id)}/> : <span>Bidding Not Started</span>}
                     </div>
                     <button className="btn btn-primary" onClick={()=>handleClick(ele._id)}>{auth.role == 'buyer'?'Bid':'View Details'}</button>
                     </div>

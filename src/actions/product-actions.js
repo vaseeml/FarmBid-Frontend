@@ -138,3 +138,33 @@ const editProduct = (data) => {
         payload: data
     }
 }
+
+export const removeProductFromUpcoming = (productId)=>{
+    return {
+        type:'REMOVE_PRODUCT_FROM_UPCOMING',
+        payload:productId
+    }
+}
+export const addProductToLive = (productId)=>{
+    return async(dispatch)=>{
+        dispatch({
+            type:'ADD_PRODUCT_TO_LIVE',
+            payload:productId
+        })
+    }
+}
+export const addProductToCompleted = (productId)=>{
+    return async(dispatch)=>{
+        dispatch({
+            type:'ADD_PRODUCT_TO_COMPLETED',
+            payload:productId
+        })
+    }
+}
+
+export const removeProductFromLive = (productId)=>{
+    return {
+        type:'REMOVE_PRODUCT_FROM_UPCOMING',
+        payload:productId
+    }
+}
