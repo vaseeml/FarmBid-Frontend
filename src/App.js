@@ -64,28 +64,6 @@ function App() {
   }, [dispatch])
   return (
     <div className="App">
-        <Header />
-        {auth.role !== 'admin' && <Sections/>}
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/loginPage" element={<LoginForm />} />
-          <Route path="/register" element={<RegistrationForm />} />
-          <Route path="/forgot-password" element={<ForgotPassword/>}/>
-          <Route path="/dashboard" element={<Dashboard/>}/>
-          <Route path="/orders" element={<Orders/>}/>
-          <Route path="/customers" element={<Customers/>}/>
-          <Route path="/login-success" element={<Rolebased/>}/>
-          <Route path="/payment-success" element={<PaymentSuccess/>}/>
-          <Route path='/upcoming' element={<UpcomingProducts/>}/>
-          <Route path='/live' element={<LiveProducts/>}/>
-          <Route path='/completed' element={<CompletedProducts/>}/>
-          <Route path='/live/:id/myProduct' element={<MyProduct/>}/>
-          <Route path='/live/:id/bid' element={<Bid/>}/>
-          <Route path='/cart' element={auth?.role == 'buyer' && <Cart/>}/>
-          <Route path='/view/:id/customer' element={<ViewCustomer/>}/>
-          <Route path='/customer/:id/bids' element={<ViewCustomerBids/>}/>
-          <Route path='/create-product' element={<CreateProduct />} />
-        </Routes>
       <Header />
       {auth.role !== 'admin' && <Sections />}
       <Routes>
