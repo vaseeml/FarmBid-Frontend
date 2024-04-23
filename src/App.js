@@ -24,7 +24,7 @@ import MyProduct from './components/pages/bid/MyProduct'
 import Bid from './components/pages/bid/Bid'
 import Cart from './components/pages/cart/Cart'
 import PaymentSuccess from './components/payments/PaymentSuccess'
-import { startGetWallet } from './actions/user-actions'
+import { startGetWallet,startGetProfile } from './actions/user-actions'
 import Customers from './components/pages/dashboard/customer/Customers'
 import { startGetAllProfiles } from './actions/admin-actions'
 import ViewCustomer from './components/pages/dashboard/customer/ViewCustomer'
@@ -53,6 +53,7 @@ function App() {
         dispatch(startGetUpComingProducts(user.role))
         // passing id is optional
         dispatch(startGetWallet(user.id))
+        dispatch(startGetProfile())
       }
       if (user.role == 'admin') {
         dispatch(startGetAllProfiles())

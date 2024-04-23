@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 export const getStartProduct = () => {
     return async (dispatch) => {
@@ -34,10 +35,13 @@ export const startCreateProducts = (data) => {
             })
             console.log(response.data)
             const currentTime = new Date()
+            const navigate = useNavigate()
             if (new Date(response.data?.biddingStart) < currentTime) {
                 dispatch(setLiveProducts(response.data))
+                navigate('/live')
             } else {
                 dispatch(setUpComingProducts(response.data))
+                navigate('/upcoming')
             }
         } catch (err) {
             console.log(err)

@@ -20,11 +20,11 @@ export default function LiveProducts(){
         }
     }
     const onBiddingEnd = (productId)=>{
-        console.log('onbidding end')
-        // dispatching the action after bidding time ends to remove the product from the live section
-        dispatch(addProductToCompleted(productId)).then(()=>{
-            dispatch(removeProductFromLive(productId))
-        })
+        // console.log('onbidding end')
+        // // dispatching the action after bidding time ends to remove the product from the live section
+        // dispatch(addProductToCompleted(productId)).then(()=>{
+        //     dispatch(removeProductFromLive(productId))
+        // })
     }
     return (
         <div>

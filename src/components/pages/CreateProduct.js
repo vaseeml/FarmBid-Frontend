@@ -34,16 +34,12 @@ export default function CreateProduct() {
         formData.append('productVideo', form.productVideo);
         formData.append('biddingStart', form.biddingStart)
         dispatch(startCreateProducts(formData))
-        const currentTime = new Date()
-        if (new Date(form.biddingStart) < currentTime) {
-            navigate('/live')
-        } else {
-            navigate('/upcoming')
-        }
+        
     }
     return (
-        <div>
-            <h2>Add Product</h2>
+        <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="card p-4" style={{width:'600px'}}>
+            <h2 className="mb-4 d-flex align-items-center justify-content-between">Create Product</h2>
             <form onSubmit={handleSubmit}>
                 <div className="form-group">
                     <label htmlFor="productName">Product Name</label>
@@ -135,6 +131,7 @@ export default function CreateProduct() {
                 </div>
                 <input type="submit" className="btn btn-primary" />
             </form>
+            </div>
         </div>
     )
 }

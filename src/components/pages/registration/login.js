@@ -4,6 +4,8 @@ import * as Yup from 'yup';
 import axios from 'axios'
 import { Link,useNavigate } from 'react-router-dom';
 import { Button, FormGroup, FormLabel, FormControl } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 const LoginForm = () => {
   const [serverErrors,setServerErrors]=useState([])
@@ -36,8 +38,11 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="container">
-      <h1>Login</h1>
+    <div className="d-flex justify-content-center align-items-center vh-100">
+    <div className="card p-4" >
+        <h2 className="mb-4 d-flex align-items-center justify-content-between">Login
+        <FontAwesomeIcon icon={faUser} className="ml-2" style={{color:'black'}} />
+        </h2>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -47,6 +52,7 @@ const LoginForm = () => {
             <FormGroup controlId="email">
               <FormLabel>Email</FormLabel>
               <Field
+                size='lg'
                 type="text"
                 name="loginId"
                 placeholder="Enter email/phone"
@@ -58,6 +64,7 @@ const LoginForm = () => {
             <FormGroup controlId="password">
               <FormLabel>Password</FormLabel>
               <Field
+                size='lg'
                 type="password"
                 name="password"
                 placeholder="Enter password"
@@ -66,11 +73,13 @@ const LoginForm = () => {
               <ErrorMessage name="password" component="div" className="text-danger" />
             </FormGroup>
 
-            <Button type="submit" >Login</Button>
+            <Button type="submit" >Login</Button><br/>
             <Link to='/forgot-password'>Forgot Password?</Link> <br /> <Link to='/register'>New User! Register Here </Link>
           </Form>
       </Formik>
+      </div>
     </div>
+  
   );
 };
 

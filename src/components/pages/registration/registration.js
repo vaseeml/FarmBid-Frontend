@@ -15,8 +15,9 @@ export default function RegistrationForm(){
     }
 
     return(
-        <div>
-            <h2>Registration Form</h2>
+        <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="card p-4">
+            <h2 className="mb-4 d-flex align-items-center justify-content-between">Register</h2>
             <Formik
             initialValues={{username:'',email:'',phone:'',password:'',role:''}}
             validationSchema={Yup.object({
@@ -68,7 +69,7 @@ export default function RegistrationForm(){
 
  
                 <label className="form-label" htmlFor="password">Password</label>
-                <Field className="form-control" name="password" type="text" id="password"/>
+                <Field className="form-control" name="password" type="password" id="password"/>
                 <ErrorMessage className="text-danger" component="div" name="password"/>
                 {formikProps.values.password.length===0&& <p style={{color:'red'}}>{helperFunction('password')}</p>}
                 <article className='indicate-warning'>
@@ -95,6 +96,7 @@ export default function RegistrationForm(){
             </Form>
             )}
             </Formik>
+            </div>
         </div>
     )
 }

@@ -17,11 +17,11 @@ export default function CountDownTimer(props){
         }
         if(props.biddingEnd){
             const difference = props.biddingEnd.getTime() - now.getTime()
-            if(difference <= 0 && props.biddingEnd){
-                console.log('invoked function')
-                props.onBiddingEnd()
-            }
-            console.log('hi')
+            // if(difference <= 0 && props.biddingEnd){
+            //     console.log('invoked function')
+            //     props.onBiddingEnd()
+            // }
+            // console.log('hi')
             return {
                 minutes:Math.floor(difference % (1000 * 60 * 60) / (1000 * 60)),
                 seconds:Math.floor(difference % (1000 * 60 ) / 1000)

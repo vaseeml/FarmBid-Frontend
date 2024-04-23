@@ -46,3 +46,17 @@ export const setProfile = (data)=>{
         payload:data
     }
 }
+export const startGetProfile = ()=>{
+    return async(dispatch)=>{
+        try{
+            const response = await axios.get('http://localhost:3000/api/profile' , {
+                headers:{
+                    'Authorization':localStorage.getItem('token')
+                }
+            })
+            dispatch(setProfile(response.data))
+        }catch(err){
+            console.log(err)
+        }
+    }
+}
