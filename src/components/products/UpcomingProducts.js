@@ -1,13 +1,17 @@
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios'
-import { useState } from 'react';
-import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { useReducer, useState } from 'react';
+import {  Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { startEditProduct , setDeleteProduct , removeProductFromUpcoming , addProductToLive } from '../../actions/product-actions';
 import CountDownTimer from './CountDownTimer';
+import { useAuth } from '../../contexts/AuthContext';
+import { Container, Card, Button, OverlayTrigger, Tooltip, Row, Col } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 export default function UpcomingProducts() {
     const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const { user } = useAuth()
     const upcomingProducts = useSelector((state) => state.products?.upcomingProducts);
-    const auth = useSelector((state) => state.auth?.data);
     const [modal, setModal] = useState(false);
     const [editId, setEditId] = useState('')
     const [form, setForm] = useState({
@@ -71,11 +75,11 @@ export default function UpcomingProducts() {
     }
     const handleClick = async(id)=>{
         // checking the role before making api requests
-        if(auth?.role == 'buyer'){
+        if(user?.role == 'buyer'){
             try{
                 const formData = {
                     product:id,
-                    user:auth.id
+                    user:user._id
                 }
                 // if buyer add item to cart
                 const response = await axios.post('http://localhost:3000/api/cart' ,formData, {
@@ -84,6 +88,7 @@ export default function UpcomingProducts() {
                     }
                 })
                 console.log('added to cart' , response.data)
+                navigate('/cart')
             }catch(err){
                 console.log(err)
             }
@@ -104,30 +109,49 @@ export default function UpcomingProducts() {
     }
     return (
         <div>
-            {upcomingProducts.map((ele) => (
-                <div key={ele._id} className="col-md-4">
-                    <div>
-                        <img
-                            src={`http://localhost:3000/${ele.productImg}`} alt='img'
-                            height='300px' width='260px'
-                        />
-
-                        <div className="card-body"><h3 className="card-title">{ele.productName}</h3>
-                            {/* <video controls height='300px' width='260px'>
-                            <source
-                            key={ele._id}
-                            src={`http://localhost:3000/${ele.productVideo}`}
+            <Container>
+                <Row xs={1} md={3}>
+                {upcomingProducts.map((ele) => (
+                    <Col key={ele._id} >
+                        <Card className='bg-light mb-3'>
+                            <Card.Img
+                                src={`http://localhost:3000/${ele.productImg}`} alt='img'
+                                height='300px' width='260px'
                             />
-                        </video> */}
-                            <p className="card-text">{ele.sellerId?.phone}</p></div>
-                    </div>
-                    <CountDownTimer biddingStart={new Date(ele.biddingStart)} onBiddingStart={()=>onBiddingStart(ele._id)}/>
 
-                    {auth.role == 'buyer' && <button className="btn btn-primary" onClick={()=>handleClick(ele._id)}>AddCart</button>}
-                    {auth.role == 'seller' && <button className="btn btn-primary" onClick={() => { handleEdit(ele._id) }}>Edit</button>}
-                    {auth.role == 'seller' && <button className="btn btn-primary" onClick={() => { handleDelete(ele._id) }}>Delete</button>}
-                </div>
-            ))}
+                            <Card.Body className="position-relative d-flex flex-column justify-content-between">
+                                    <div className='d-flex justify-content-start mb-2'>
+                                        <Card.Title>
+                                            Veg. Name: {ele.productName.toUpperCase()}
+                                        </Card.Title>
+                                    </div>
+                                    <div>
+                                    <OverlayTrigger
+                                        placement="top"
+                                        overlay={
+                                        <Tooltip id={`tooltip-seller-${ele._id}`}>
+                                            Seller Details: {ele.sellerId?.email}
+                                        </Tooltip>
+                                        }
+                                    >
+                                        <span> Farmer Ph:{ele.sellerId?.phone|| 'seller:'}</span>
+                                    </OverlayTrigger>
+                                    </div>
+                                    <div className="mb-2">Quantity: {ele.quantity}</div>
+                                    <div className="d-flex align-items-center position-absolute top-0 end-0">
+                                        <CountDownTimer biddingStart={new Date(ele.biddingStart)} onBiddingStart={()=>onBiddingStart(ele._id)}/>
+                                    </div>
+                                    <div className="d-flex justify-content-between align-items-center mt-2">
+                                    {user?.role == 'buyer' && <Button variant="success" size="sm" className="me-2" onClick={()=>handleClick(ele._id)}>Add to Cart</Button> }
+                                    {user?.role == 'seller' && <Button variant="warning" size="sm" className="me-2" onClick={() => { handleEdit(ele._id) }} >Edit</Button> }
+                                    {user?.role == 'seller' && <Button variant="danger" size="sm" onClick={() => { handleDelete(ele._id) }}>Delete</Button> }
+                                    </div>
+                            </Card.Body>
+                        </Card>
+                    </Col>
+                ))}
+                </Row>
+            </Container>
             <Modal isOpen={modal} toggle={toggle}>
                 <ModalHeader toggle={toggle}>Edit Product</ModalHeader>
                 <ModalBody>

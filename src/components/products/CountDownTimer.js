@@ -1,4 +1,6 @@
 import { useState , useEffect } from 'react'
+
+import { IoTime  } from 'react-icons/io5'
 export default function CountDownTimer(props){
     const calculateTimeRemaining = ()=>{
         const now = new Date()
@@ -7,7 +9,7 @@ export default function CountDownTimer(props){
             if (difference <= 0 && props.onBiddingStart) {
                 props.onBiddingStart()
             }
-            
+            // console.log('bidding start running every second')
             return {
                 days:Math.floor(difference / (1000 * 60 * 60 * 24)),
                 hours:Math.floor(difference % ( 1000 * 60 * 60 * 24) / (1000 * 60 * 60 )),
@@ -16,12 +18,11 @@ export default function CountDownTimer(props){
             }
         }
         if(props.biddingEnd){
-            const difference = props.biddingEnd.getTime() - now.getTime()
-            if(difference <= 0 && props.biddingEnd){
-                console.log('invoked function')
+            let difference = props.biddingEnd?.getTime() - now.getTime()
+            if(difference <= 0 && props.onBiddingEnd){;
                 props.onBiddingEnd()
             }
-            console.log('hi')
+            // console.log('bidding end runnning every second')
             return {
                 minutes:Math.floor(difference % (1000 * 60 * 60) / (1000 * 60)),
                 seconds:Math.floor(difference % (1000 * 60 ) / 1000)
@@ -39,8 +40,8 @@ export default function CountDownTimer(props){
     },[])
     return (
         <div>
-            {props.biddingStart?<p>Time To Live {timeRemaining.days}d {timeRemaining.hours}h {timeRemaining.minutes}m {timeRemaining.seconds}s</p>:
-            <p>Bid Ends In {timeRemaining.minutes}m {timeRemaining.seconds}s</p>
+            {props.biddingStart?<p><IoTime color='green' /> Time Left: {timeRemaining.days}d {timeRemaining.hours}h {timeRemaining.minutes}m {timeRemaining.seconds}s</p>:
+            <span  className="bg-warning text-dark p-1 rounded" ><IoTime color='black' /> {timeRemaining.minutes}m {timeRemaining.seconds}s Ends</span>
             }
         </div>
     )

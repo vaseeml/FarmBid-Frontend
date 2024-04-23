@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { productCreatedNotify } from '../components/Notify'
 
 export const getStartProduct = () => {
     return async (dispatch) => {
@@ -32,7 +33,7 @@ export const startCreateProducts = (data) => {
             const response = await axios.post('http://localhost:3000/api/create/product', data, {
                 headers: { 'Authorization': localStorage.getItem("token") }
             })
-            console.log(response.data)
+            productCreatedNotify()
             const currentTime = new Date()
             if (new Date(response.data?.biddingStart) < currentTime) {
                 dispatch(setLiveProducts(response.data))
@@ -51,12 +52,14 @@ export const setProducts = (data) => {
     }
 }
 export const getStartLiveProducts=(role)=>{
+    console.log('role in live' , role)
     return async(dispatch)=>{
         try{
             // getting live products based on role
             const response = await axios.get(`http://localhost:3000/api/products/live?role=${role}`,{
                 headers:{'Authorization':localStorage.getItem('token')}
             })
+            console.log('populate' , response.data)
             dispatch(setLiveProducts(response.data))
         } catch (err) {
             console.log(err)
@@ -71,6 +74,7 @@ export const setLiveProducts = (data) => {
     }
 }
 export const getStartCompletedProducts=(role)=>{
+    console.log(role)
     return async(dispatch)=>{
         try{
             // getting completed products based on role
@@ -153,18 +157,16 @@ export const addProductToLive = (productId)=>{
         })
     }
 }
-export const addProductToCompleted = (productId)=>{
-    return async(dispatch)=>{
-        dispatch({
+export const addProductToCompleted = (product)=>{
+    return {
             type:'ADD_PRODUCT_TO_COMPLETED',
-            payload:productId
-        })
+            payload:product
     }
 }
 
-export const removeProductFromLive = (productId)=>{
+export const removeProductFromLive = (product)=>{
     return {
-        type:'REMOVE_PRODUCT_FROM_UPCOMING',
-        payload:productId
+        type:'REMOVE_PRODUCT_FROM_LIVE',
+        payload:product
     }
 }
