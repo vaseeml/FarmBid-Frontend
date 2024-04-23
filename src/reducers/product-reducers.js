@@ -11,13 +11,13 @@ export const productReducer = (state = initialState, action) => {
             return { ...state, data: action.payload }
         }
         case 'SET_LIVE_PRODUCTS': {
-            return { ...state, liveProducts: [...state.liveProducts, ...action.payload] }
+            return { ...state, liveProducts:action.payload }
         }
         case 'SET_COMPLETED_PRODUCTS': {
             return { ...state, completedProducts: action.payload }
         }
         case 'SET_UPCOMING_PRODUCTS': {
-            return { ...state, upcomingProducts: [...state.upcomingProducts, ...action.payload] }
+            return { ...state, upcomingProducts: action.payload }
         }
         case 'DELETE_PRODUCT': {
             return { ...state, upcomingProducts: state.upcomingProducts.filter((ele) => ele._id !== action.payload._id) }
@@ -42,7 +42,7 @@ export const productReducer = (state = initialState, action) => {
         }
         case 'REMOVE_PRODUCT_FROM_LIVE':{
             return {
-                ...state , liveProducts:state.liveProducts.filter(ele=>ele._id !== action.payload)
+                ...state , liveProducts:state.liveProducts.filter(ele=>ele._id !== action.payload._id)
             }
         }
         case 'ADD_PRODUCT_TO_LIVE':{
@@ -52,7 +52,7 @@ export const productReducer = (state = initialState, action) => {
         }
         case 'ADD_PRODUCT_TO_COMPLETED':{
             return {
-                ...state , completedProducts:[...state.completedProducts , state.liveProducts.find(ele=>ele._id == action.payload)]
+                ...state , completedProducts:[...state.completedProducts , action.payload]
             }
         }
         default: {
