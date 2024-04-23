@@ -1,11 +1,12 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from 'yup'
-import { Link } from "react-router-dom";
+import { Link , useNavigate } from "react-router-dom";
 import axios from 'axios'
 import { useState } from "react";
+import { registrationNotify } from "../../Notify";
 export default function RegistrationForm(){
     const [serverErrors,setServerErrors]=useState([])
-    
+    const navigate = useNavigate()
     const helperFunction=(name)=>{
        return serverErrors.filter((ele)=>{
             return ele.path===name
@@ -41,7 +42,8 @@ export default function RegistrationForm(){
             onSubmit={async (values) => {
                 try {
                     const response = await axios.post("http://localhost:3000/api/register", values)
-                    console.log(response.data)
+                    registrationNotify()
+                    navigate('/loginPage')
                 } catch (err) {
                     console.log(err)
                     setServerErrors(err.response.data.errors)

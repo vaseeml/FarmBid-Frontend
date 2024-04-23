@@ -4,12 +4,15 @@ import * as Yup from 'yup';
 import axios from 'axios'
 import { Link,useNavigate } from 'react-router-dom';
 import { Button, FormGroup, FormLabel, FormControl } from 'react-bootstrap';
+import { useAuth } from '../../../contexts/AuthContext';
+import { loginNotify } from '../../Notify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 
 const LoginForm = () => {
   const [serverErrors,setServerErrors]=useState([])
   const navigate=useNavigate()
+  const { userDispatch } = useAuth()
   const initialValues = {
     loginId: '',
     password: '',
@@ -25,12 +28,16 @@ const LoginForm = () => {
   const handleSubmit = async(values) => {
     try{
       const response=await axios.post('http://localhost:3000/api/login',values)
-      console.log(response.data)
       localStorage.setItem('token',response.data.token)
       setServerErrors("")
-
-      navigate('/login-success')
-      window.location.reload()
+      userDispatch({type:'SET_USER' , payload:response.data.user})
+      setUserLogin()
+      if(response.data.user?.role !== 'admin'){
+        navigate('/live')
+      }else{
+        navigate('/dashboard')
+      }
+      loginNotify()
     }catch(err){
       console.log(err)
       setServerErrors(err.response.data.errors)

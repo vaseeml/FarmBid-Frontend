@@ -1,5 +1,8 @@
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 import { Route, Routes } from 'react-router-dom'
-import { useEffect } from 'react'
+import { useEffect , useState } from 'react'
+import { jwtDecode } from 'jwt-decode'
 import { getStartProduct, getStartLiveProducts, startGetUpComingProducts, getStartCompletedProducts } from './actions/product-actions'
 import './App.css'
 import { useDispatch } from 'react-redux'
@@ -10,16 +13,13 @@ import RegistrationForm from './components/pages/registration/registration'
 import ForgotPassword from './components/pages/registration/forgotPassword'
 import Dashboard from './components/pages/dashboard/dashboard'
 import Orders from './components/pages/dashboard/orders'
-import Rolebased from './components/pages/dashboard/Rolebased'
-import { jwtDecode } from 'jwt-decode'
-import { useSelector } from 'react-redux'
-import { setTokenData } from './actions/auth-actions'
+import Rolebased from './Private-Routes/Rolebased'
 
 import Sections from './components/headers/sections'
-import UpcomingProducts from './components/pages/UpcomingProducts'
-import LiveProducts from './components/pages/LiveProducts'
-import CompletedProducts from './components/pages/CompletedProducts'
-import CreateProduct from './components/pages/CreateProduct'
+import UpcomingProducts from './components/products/UpcomingProducts'
+import LiveProducts from './components/products/LiveProducts'
+import CompletedProducts from './components/products/CompletedProducts'
+import CreateProduct from './components/products/CreateProduct'
 import MyProduct from './components/pages/bid/MyProduct'
 import Bid from './components/pages/bid/Bid'
 import Cart from './components/pages/cart/Cart'
@@ -34,47 +34,71 @@ import AllProducts from './components/pages/dashboard/sellers/allProducts'
 import ViewSeller from './components/pages/dashboard/sellers/viewSeller'
 import BlockedSellers from './components/pages/dashboard/sellers/BlockedSellers'
 import CreateProfile from './components/pages/Profile/Profile'
+import { useAuth } from './contexts/AuthContext'
+import { useContext } from 'react'
+import { AuthContext } from './contexts/AuthContext'
+import PrivateRoute from './Private-Routes/PrivateRoutes'
+import axios from 'axios'
 function App() {
-  const auth = useSelector((state) => {
-    return state.auth.data
-  })
+  const [ loggedIn , setLoggedIn ] = useState(false)
   const dispatch = useDispatch()
+  const { user , userDispatch } = useContext(AuthContext)
   useEffect(() => {
-    // checking the token 
-    const token = localStorage.getItem('token')
-    if (token) {
-      // decoding the token
-      const user = jwtDecode(token)
-      dispatch(setTokenData(user))
-      // conditionally dispatching the functions to get data based on role
-      if (user.role !== 'admin') {
-        dispatch(getStartLiveProducts(user.role))
-        dispatch(getStartCompletedProducts(user.role))
-        dispatch(startGetUpComingProducts(user.role))
-        // passing id is optional
-        dispatch(startGetWallet(user.id))
-        dispatch(startGetProfile())
+    (async()=>{
+      if(localStorage.getItem('token')){
+        try{
+          const response = await axios.get('http://localhost:3000/api/user/account' , {
+            headers:{
+              'Authorization':localStorage.getItem('token')
+            }
+          })
+          userDispatch({type:'SET_USER' , payload:response.data})
+        }catch(err){
+          console.log(err)
+        }
       }
-      if (user.role == 'admin') {
-        dispatch(startGetAllProfiles())
-      }
-    } else {
-      // dispatch after page is mounted
-      dispatch(getStartProduct())
-    }
-  }, [dispatch])
+    })();
+  }, [])
+  useEffect(()=>{
+        // checking the token 
+        const token = localStorage.getItem('token')
+    
+        if (token) {
+          const auth = jwtDecode(token)
+          // conditionally dispatching the functions to get data based on role
+          console.log('user.role' , user)
+          if (auth?.role !== 'admin') {
+            dispatch(getStartLiveProducts(auth?.role))
+            dispatch(getStartCompletedProducts(auth?.role))
+            dispatch(startGetUpComingProducts(auth?.role))
+            // passing id is optional
+            dispatch(startGetWallet(auth?.id))
+          }
+          if (auth?.role == 'admin') {
+            dispatch(startGetAllProfiles())
+          }
+        } else {
+          // dispatch after page is mounted
+          dispatch(getStartProduct())
+        }
+  },[loggedIn])
+  const setUserLogin = ()=>{
+    setLoggedIn(!loggedIn)
+  }
   return (
     <div className="App">
       <Header />
-      {auth.role !== 'admin' && <Sections />}
+      {user?.role !== 'admin' && <Sections />}
       <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/loginPage" element={<LoginForm />} />
+        <Route path="/" element={ localStorage.getItem('token') ?<LiveProducts/>:<Home/>}/>
+        <Route path="/loginPage" element={<LoginForm setUserLogin={setUserLogin}/>} />
         <Route path="/register" element={<RegistrationForm />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/customers" element={<Customers />} />
+        <Route path='/customer/:id/bids' element={<ViewCustomer/>}/>
+        <Route path='/customer/:id/bids' element={<ViewCustomerBids/>}/>
         <Route path="/sellers" element={<Sellers />} />
         <Route path="/view/:id/seller" element={<ViewSeller />} />
         <Route path="/blocked/sellers" element={<BlockedSellers />} />
@@ -87,11 +111,20 @@ function App() {
         <Route path='/completed' element={<CompletedProducts />} />
         <Route path='/live/:id/myProduct' element={<MyProduct />} />
         <Route path='/live/:id/bid' element={<Bid />} />
-        <Route path='/cart' element={auth?.role == 'buyer' && <Cart />} />
+        <Route path='/cart' element={
+          <PrivateRoute permittedRoles={['buyer']}>
+            <Cart/>
+          </PrivateRoute>
+        } />
         {/* <Route path='/view/:id/details' element={}/> */}
 
-        <Route path='/create-product' element={<CreateProduct />} />
+        <Route path='/create-product' element={
+          <PrivateRoute permittedRoles={['seller']}>
+            <CreateProduct />
+          </PrivateRoute>
+        } />
       </Routes>
+      <ToastContainer/>
     </div>
   )
 }

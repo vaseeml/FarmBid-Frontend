@@ -6,6 +6,7 @@ import { isEmpty } from 'lodash';
 import { useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart , faUserCircle } from '@fortawesome/free-solid-svg-icons';
+import ConditionalLink from '../../Private-Routes/Rolebased';
 export default function Header() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
 
@@ -54,10 +55,14 @@ export default function Header() {
                         </>
                     ) : (<Nav.Link onClick={handleLogout}>Logout</Nav.Link>)}
                     <Nav.Link href="#">Service</Nav.Link>
-                    <Nav.Link as={Link} to="/create-product">Create Product</Nav.Link>
+                    {
+                      ConditionalLink('/create-product' , ['seller']) && <Nav.Link as={Link} to="/create-product">Create Product</Nav.Link>
+                    }
                 </Nav>
             </Navbar.Collapse>
-            <FontAwesomeIcon icon={faShoppingCart} size="2x" color="blue"  onClick={handleCart}/>
+            {
+              ConditionalLink('/cart' , ['buyer']) && <FontAwesomeIcon icon={faShoppingCart} size="2x" color="blue"  onClick={handleCart}/>
+            }
             <Dropdown isOpen={dropdownOpen} toggle={toggle}>
                 <DropdownToggle caret>
                 <div className="profile-icon" style={{color: '#007bff',fontsize: '2rem'}}>
