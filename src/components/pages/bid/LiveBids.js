@@ -26,7 +26,7 @@ export default function LiveBids({ productId }){
                 console.log(err)
             }
         })();
-    })
+    },[])
     useEffect(() => {
         socket.on('newBid', (bidData) => {
         // Handle bid update (e.g., update UI)

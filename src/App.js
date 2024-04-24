@@ -14,8 +14,6 @@ import ForgotPassword from './components/pages/registration/forgotPassword'
 import Dashboard from './components/pages/dashboard/dashboard'
 import Orders from './components/pages/dashboard/orders'
 import Rolebased from './Private-Routes/Rolebased'
-
-import Sections from './components/headers/sections'
 import UpcomingProducts from './components/products/UpcomingProducts'
 import LiveProducts from './components/products/LiveProducts'
 import CompletedProducts from './components/products/CompletedProducts'
@@ -71,6 +69,7 @@ function App() {
             dispatch(getStartLiveProducts(auth?.role))
             dispatch(getStartCompletedProducts(auth?.role))
             dispatch(startGetUpComingProducts(auth?.role))
+            dispatch(startGetProfile())
             // passing id is optional
             dispatch(startGetWallet(auth?.id))
           }
@@ -88,7 +87,6 @@ function App() {
   return (
     <div className="App">
       <Header />
-      {user?.role !== 'admin' && <Sections />}
       <Routes>
         <Route path="/" element={ localStorage.getItem('token') ?<LiveProducts/>:<Home/>}/>
         <Route path="/loginPage" element={<LoginForm setUserLogin={setUserLogin}/>} />
