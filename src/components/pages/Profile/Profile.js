@@ -11,6 +11,7 @@ export default function CreateProfile() {
     const profile = useSelector((state) => {
         return state.user.profile
     })
+    console.log(profile)
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [disabled, setDisabled] = useState(true)
@@ -97,7 +98,7 @@ export default function CreateProfile() {
             // dispatch(setProfile(response.data))
             // navigate('/login-sucess')
         } catch (err) {
-            console.log(err)
+            console.log(err.message)
         }
 
     }

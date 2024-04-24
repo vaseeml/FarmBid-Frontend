@@ -9,7 +9,7 @@ import { loginNotify } from '../../Notify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 
-const LoginForm = () => {
+const LoginForm = ({setUserLogin}) => {
   const [serverErrors,setServerErrors]=useState([])
   const navigate=useNavigate()
   const { userDispatch } = useAuth()
