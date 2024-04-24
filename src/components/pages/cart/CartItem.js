@@ -1,5 +1,8 @@
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
+import { Card } from 'reactstrap'
 export default function CartItem({ item , removeProduct}){
+    const navigate = useNavigate()
     const handleClick = async(id)=>{
         // asking the confirmation from the user
         const confirm = window.confirm('Are You Sure? You Want To Remove From Cart')
@@ -18,16 +21,25 @@ export default function CartItem({ item , removeProduct}){
             }
         }
     }
-    const handleBid = ()=>{
-        // codes goes here...
-        console.log('bidding')
+    const handleBid = (productId)=>{
+        navigate(`/live/${productId}/bid`)
     }
     return (
-        <div>
-            <img src={`http://localhost:3000/${item.product?.productImg}`} alt="product"/>
-            <h4>{item.product?.productName}</h4>
-            <button className="btn btn-danger" onClick={()=>handleClick(item._id)}>Remove Cart</button>
-            <button  className="btn btn-success" disabled={new Date(item.product?.biddingStart) > new Date()} onClick={()=>handleBid(item.product?._id)}>Bid</button>
+        <div className="col-md-4 mb-3">
+        <div className="card">
+          <img src={`http://localhost:3000/${item.product?.productImg}`} 
+            className="card-img-top"  
+            height="300px"
+            width="260px"
+            alt="Product" />
+          <div className="card-body">
+            <h5 className="card-title">{item.product?.productName}</h5>
+            <p className="card-text">Stock: {item.product?.stock}</p>
+            <p className="card-text">Base Price: {item.product?.basePrice}</p>
+            <button className="btn btn-danger" onClick={() => removeProduct(item._id)}>Remove Cart</button>
+            <button className="btn btn-success" onClick={() => handleBid(item.product?._id)}>Bid</button>
+          </div>
         </div>
+      </div>
     )
 }

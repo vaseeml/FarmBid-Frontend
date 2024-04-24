@@ -113,10 +113,10 @@ export default function UpcomingProducts() {
                 <Row xs={1} md={3}>
                 {upcomingProducts.map((ele) => (
                     <Col key={ele._id} >
-                        <Card className='bg-light mb-3'>
+                        <Card className='bg-light mb-3' style={{ height: '400px' }}>
                             <Card.Img
                                 src={`http://localhost:3000/${ele.productImg}`} alt='img'
-                                height='300px' width='260px'
+                                height='200px' width='260px'
                             />
 
                             <Card.Body className="position-relative d-flex flex-column justify-content-between">

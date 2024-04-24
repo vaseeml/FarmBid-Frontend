@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import swal from 'sweetalert'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios'
@@ -9,7 +10,7 @@ import { loginNotify } from '../../Notify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
 
-const LoginForm = () => {
+const LoginForm = ({setUserLogin}) => {
   const [serverErrors,setServerErrors]=useState([])
   const navigate=useNavigate()
   const { userDispatch } = useAuth()

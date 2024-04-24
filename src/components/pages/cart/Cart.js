@@ -33,13 +33,11 @@ export default function Cart(){
     return (
         <Container>
         <h2>Shopping Cart</h2>
-        <Col>
+        <Row xs={1} md={3}>
             {cart.map((item, index) => (
-                <Row key={index} xs="12">
-                    <CartItem item={item} removeProduct={removeProduct} />
-                </Row>
+            <CartItem key={index} item={item} removeProduct={removeProduct} />
             ))}
-        </Col>
+        </Row>
         </Container>
     )
 }

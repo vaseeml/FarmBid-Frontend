@@ -25,6 +25,7 @@ export default function ViewCustomerBids(){
                         'Authorization':localStorage.getItem('token')
                     }
                 })
+                console.log('bids anubranth' , response.data)
                 setCustomerBids(response.data)
             } catch(err){
                 console.log(err)
