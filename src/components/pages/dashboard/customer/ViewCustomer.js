@@ -10,7 +10,7 @@ export default function ViewCustomer(){
         return state.admin.profiles.find(ele=>ele._id == id)
     })
     const handleViewBids = ()=>{
-        navigate(`/customer/${id}/bids`)
+        navigate(`/customer/${customer.userId._id}/bids`)
     }
     return (
         <Container className="mt-5">

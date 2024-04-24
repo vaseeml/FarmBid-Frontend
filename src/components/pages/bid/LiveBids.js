@@ -44,20 +44,22 @@ export default function LiveBids({ productId }){
     }, []); // Only run once when the component mounts
     return (
         <div className='list-group'>
-        {/* Display list of previous bids */}
         <h3>Previous Bids</h3>
-        <ul>
-          {previousBids.map((bid) => (
-            <li className={`list-group-item ${bid.sender === 'buyer' ? 'buyer' : 'seller'}`}>
-            <div className="d-flex w-100 justify-content-between">
-              <h5 className="mb-1">{bid.bidderId?.username}</h5>
-              <small>{formatTimestamp(bid.createdAt)}</small>
-              {/* <small>{bid.createdAt}</small> */}
-            </div>
-            <p className="mb-1">Bid Amount: {bid.amount}</p>
-          </li>
-          ))}
-        </ul>
-      </div>  
+        <div  style={{height: '400px', overflowY: 'scroll'}}>
+            {/* Display list of previous bids */}
+           { previousBids.length !== 0 ? <ul>
+            {previousBids.map((bid) => (
+                <li className={`list-group-item ${bid.sender === 'buyer' ? 'buyer' : 'seller'}`}>
+                <div className="d-flex w-100 justify-content-between">
+                <h5 className="mb-1">{bid.bidderId?.username}</h5>
+                <small>{formatTimestamp(bid.createdAt)}</small>
+                {/* <small>{bid.createdAt}</small> */}
+                </div>
+                <p className="mb-1">Bid Amount: {bid.amount}</p>
+            </li>
+            ))}
+            </ul>: <p className='btn btn-primary'>Place First Bid</p>}
+        </div>
+        </div>
     )
 }

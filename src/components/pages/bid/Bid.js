@@ -1,3 +1,5 @@
+// import logo from '../../../assets/farmbid-bg12.jpg'
+import swal from 'sweetalert'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { useEffect , useState } from 'react'
@@ -47,6 +49,7 @@ export default function Bid(){
             // sending the data to product connected users
             socket.emit('newBid' , response.data)
             // reseting the state
+            swal('Bid Placed!', `amount ${response.data.amount}` , 'success')
             setNumber('')
         } catch(err){
             console.log(err)
@@ -54,35 +57,35 @@ export default function Bid(){
     }
     return (
         <div className='row justify-content-center'>
-        <div key={product._id} className="col-md-4">
+        <div key={product?._id} className="col-md-4">
         <div>
         <img
                 src={`http://localhost:3000/${product?.productImg}`} alt='img'
                 height='300px' width='260px'
             />
         
-        <div className="card-body"><h3 className="card-title">{product.productName}</h3>
+        <div className="card-body"><h3 className="card-title">{product?.productName}</h3>
         {/* <video controls height='300px' width='260px'>
                 <source
                 key={product._id}
                 src={`http://localhost:3000/${product.productVideo}`}
                 />
             </video> */}
-        <p className="card-text">{product.sellerId?.phone}</p></div>
+        <p className="card-text">{product?.sellerId?.phone}</p></div>
         </div>
-        <p>Base Price - {product.basePrice}</p>
-        <p>Farmer - {product.sellerId?.name}</p>
-        <p>Mobile Number - {product.sellerId?.phone}</p>
-        <p>Stock - {product.stock}</p>
-        <p>Address - {product.address}</p>
+        <p>Base Price - {product?.basePrice}</p>
+        <p>Farmer - {product?.sellerId?.name}</p>
+        <p>Mobile Number - {product?.sellerId?.phone}</p>
+        <p>Stock - {product?.stock}</p>
+        <p>Address - {product?.address}</p>
         </div>
         <div className='col-md-4'>
             <input type='number' value={number} onChange={(e)=>setNumber(e.target.value)}/>
             <button className="btn btn-success" onClick={handleClick}>Bid</button>
-            <LiveBids productId={product._id}/>
+            <LiveBids productId={product?._id}/>
         </div>
         <div className='col-md-2'>
-            <CountDownTimer biddingEnd={new Date(product.biddingEnd)}/>
+            <CountDownTimer biddingEnd={new Date(product?.biddingEnd)}/>
         </div>
         </div>
     )

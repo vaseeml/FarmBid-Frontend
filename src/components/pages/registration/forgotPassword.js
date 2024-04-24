@@ -2,7 +2,7 @@ import {useNavigate} from 'react-router-dom'
 import { useState } from "react";
 import { Form, Button, Alert } from "react-bootstrap";
 import axios from "axios";
-
+import swal from 'sweetalert'
 export default function ForgotPassword() {
     const navigate=useNavigate()
   const [phone, setPhone] = useState("");
@@ -37,6 +37,7 @@ export default function ForgotPassword() {
       console.log(response.data);
       setMessage("OTP verified successfully!");
       setShowPasswordForm(true)
+      swal('OTP Verified!' , `otp verified for phone no ${phone}` , 'success')
       setOtpError("")
     } catch (err) {
       console.log(err);
@@ -55,6 +56,7 @@ export default function ForgotPassword() {
         const response=await axios.post('http://localhost:3000/api/update/password',formData)
         console.log(response.data)
         setMessage("Password updated successfully!");
+        swal('Password Updated!', 'successufully' , 'success')
         setPasswordError("")
         navigate('/loginPage')
     }catch(err){

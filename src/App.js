@@ -1,3 +1,4 @@
+
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { Route, Routes } from 'react-router-dom'
@@ -72,6 +73,7 @@ function App() {
             dispatch(startGetProfile())
             // passing id is optional
             dispatch(startGetWallet(auth?.id))
+            dispatch(startGetProfile())
           }
           if (auth?.role == 'admin') {
             dispatch(startGetAllProfiles())
@@ -85,7 +87,7 @@ function App() {
     setLoggedIn(!loggedIn)
   }
   return (
-    <div className="App">
+    <div className="App" >
       <Header />
       <Routes>
         <Route path="/" element={ localStorage.getItem('token') ?<LiveProducts/>:<Home/>}/>
@@ -95,10 +97,11 @@ function App() {
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/orders" element={<Orders />} />
         <Route path="/customers" element={<Customers />} />
-        <Route path='/customer/:id/bids' element={<ViewCustomer/>}/>
+        {/* <Route path='/customer/:id/bids' element={<ViewCustomer/>}/> */}
         <Route path='/customer/:id/bids' element={<ViewCustomerBids/>}/>
         <Route path="/sellers" element={<Sellers />} />
         <Route path="/view/:id/seller" element={<ViewSeller />} />
+        <Route path="/view/:id/customer" element={<ViewCustomer />} />
         <Route path="/blocked/sellers" element={<BlockedSellers />} />
         <Route path="/view/:id/products" element={<AllProducts />} />
         <Route path="/login-success" element={<Rolebased />} />

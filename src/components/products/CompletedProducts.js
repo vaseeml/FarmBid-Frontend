@@ -1,11 +1,11 @@
 import { useSelector } from 'react-redux'
-import { Container, Row, Col, Card ,Button , Carousel} from 'react-bootstrap'
+import {Modal ,Card ,Button , Carousel} from 'react-bootstrap'
 import { useState } from 'react'
-import Slider from 'react-slick';
+import axios from 'axios'
 export default function CompletedProducts(){
-    
-    // State to track whether to display image or video
-    const [displayImage, setDisplayImage] = useState(true);
+    const [showModal, setShowModal] = useState(false)
+    const [ buyerInfo , setBuyerInfo ] = useState({})
+    const [displayImage, setDisplayImage] = useState(true)
     const completedProducts = useSelector((state)=>{
         return state.products?.completedProducts
     })
@@ -21,73 +21,40 @@ export default function CompletedProducts(){
             // Toggle between displaying image and video every 5 seconds
             if ((next + 1) % 2 === 0) {
                 setTimeout(() => {
-                    setDisplayImage(true);
-                }, 5000);
+                    setDisplayImage(true)
+                }, 5000)
             } else {
                 setTimeout(() => {
-                    setDisplayImage(false);
-                }, 5000);
+                    setDisplayImage(false)
+                }, 5000)
             }
         },
     };
+    const handleShowBuyerInfo = async(id) => {
+      setShowModal(!showModal)
+      try{
+        const response = await axios.get(`http://localhost:3000/api/order/${id}/product` , {
+          headers:{
+            "Authorization":localStorage.getItem('token')
+          }
+        })
+        console.log(response.data)
+        setBuyerInfo(response.data)
+      } catch(err){
+        console.log(err)
+      }
+    };
+    const handleTimeShow = (createdAt)=>{
+      const date = new Date(createdAt)
+      const indianTime = date.toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' })
+      return indianTime
+    }
     return (
-    // <Container>
-    //   <Row>
-    //     {completedProducts.map((ele) => (
-    //       <Col key={ele._id} className="mb-3">
-    //         <Card style={{ height: '200px' }}>
-    //           <Card.Img 
-    //             src={`http://localhost:3000/${ele.productImg}`}
-    //             alt="Product Image" 
-    //             style={{ maxHeight: '100%', width: 'auto', maxWidth: '100px' }} 
-    //           />
-    //           <Card.Body>
-    //             <Card.Title>Vegetable Name: {ele.productName}</Card.Title>
-    //             <div className="d-flex ">
-    //               <span className='bg-primary text-dark p-1 rounded me-3'>Units: {ele.stock}</span>
-    //               <span className='bg-warning text-dark p-1 rounded me-3'>Base Price: {ele.basePrice}</span>
-    //               <span className="bg-light rounded text-muted me-3">Seller Ph: {ele.sellerId?.phone}</span>
-    //             </div>
-    //             <div className="mt-auto">
-    //               <Button variant="primary">View Details</Button>
-    //             </div>
-    //           </Card.Body>
-    //         </Card>
-    //       </Col>
-    //     ))}
-    //   </Row>
-    // </Container>
-   
-
-        // <div>
-        //     {
-        //         completedProducts.map((ele)=>{
-        //             return <div key={ele._id} className="col-md-4">
-        //             <div>
-        //             <img
-        //                     src={`http://localhost:3000/${ele.productImg}`} alt='img'
-        //                     height='300px' width='260px'
-        //                 />
-                    
-        //             <div className="card-body"><h3 className="card-title">{ele.productName}</h3>
-        //             <video controls height='300px' width='260px'>
-        //                     <source
-        //                     key={ele._id}
-        //                     src={`http://localhost:3000/${ele.productVideo}`}
-        //                     />
-        //                 </video>
-        //             <p className="card-text">{ele.sellerId?.phone}</p></div>
-        //             </div>
-                
-        //             </div>
-        //         })
-        //     }
-        // </div>
-        <div className="row">
+      <div className="row">
       {
         completedProducts.map((ele) => (
-          <div className="col-md-4 mb-3" key={ele._id}>
-            <Card>
+          <div className="col-md-3 mb-3" key={ele._id}>
+            <Card style={{ margin: '0 10px' }}>
               <Carousel>
                 <Carousel.Item>
                   <img
@@ -104,13 +71,31 @@ export default function CompletedProducts(){
                 </Carousel.Item>
               </Carousel>
               <Card.Body>
-                <Card.Title>{ele.productName}</Card.Title>
-                <Card.Text>{ele.sellerId?.phone}</Card.Text>
+                <Card.Title>Veg.Name: {ele.productName.toUpperCase()}</Card.Title>
+                <Card.Text>Base Price: {ele.basePrice}Rs</Card.Text>
+                <Card.Text>Listed On: {handleTimeShow(ele.createdAt)}</Card.Text>
+                <Button onClick={() => handleShowBuyerInfo(ele._id)} variant="primary">Details</Button>
               </Card.Body>
             </Card>
           </div>
         ))
       }
+       <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Bidded Amout - {buyerInfo.bidAmount}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+            <div>
+              <p>Name: {buyerInfo.bidder?.username}</p>
+              <p>Email: {buyerInfo.bidder?.email}</p>
+              <p>Phone: {buyerInfo.bidder?.phone}</p>
+              <p>Bid Date: {handleTimeShow(buyerInfo.createdAt)}</p>
+            </div>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowModal(false)}>Close</Button>
+        </Modal.Footer>
+      </Modal>
     </div>
 
     )
