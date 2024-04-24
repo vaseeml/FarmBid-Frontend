@@ -1,11 +1,15 @@
 import { useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
 
 export default function Home(){
+    const navigate=useNavigate()
     const products = useSelector((state)=>{
         // state is object which has products objects
         return state.products
     })
-    
+    const handleClick=()=>{
+        navigate('/loginpage')
+    }
     return (
             <div className="row">
 
@@ -27,7 +31,7 @@ export default function Home(){
                                 </video> */}
                             <p className="card-text">{ele.sellerId?.phone}</p></div>
                             </div>
-                            <button className="btn btn-primary">Bid</button>
+                            <button className="btn btn-primary" onClick={handleClick}>Bid</button>
                             </div>
                     })
                 }
