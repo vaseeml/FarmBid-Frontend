@@ -47,7 +47,7 @@ export default function LiveBids({ productId }){
         <h3>Previous Bids</h3>
         <div  style={{height: '400px', overflowY: 'scroll'}}>
             {/* Display list of previous bids */}
-           { previousBids.length !== 0 ? <ul>
+          <ul>
             {previousBids.map((bid) => (
                 <li className={`list-group-item ${bid.sender === 'buyer' ? 'buyer' : 'seller'}`}>
                 <div className="d-flex w-100 justify-content-between">
@@ -58,7 +58,7 @@ export default function LiveBids({ productId }){
                 <p className="mb-1">Bid Amount: {bid.amount}</p>
             </li>
             ))}
-            </ul>: <p className='btn btn-primary'>Place First Bid</p>}
+            </ul>
         </div>
         </div>
     )

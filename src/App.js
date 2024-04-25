@@ -38,6 +38,8 @@ import { useContext } from 'react'
 import { AuthContext } from './contexts/AuthContext'
 import PrivateRoute from './Private-Routes/PrivateRoutes'
 import axios from 'axios'
+
+
 function App() {
   const [ loggedIn , setLoggedIn ] = useState(false)
   const dispatch = useDispatch()
@@ -88,6 +90,7 @@ function App() {
   }
   return (
     <div className="App" >
+       
       <Header />
       <Routes>
         <Route path="/" element={ localStorage.getItem('token') ?<LiveProducts/>:<Home/>}/>

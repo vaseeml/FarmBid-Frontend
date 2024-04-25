@@ -36,13 +36,11 @@ export const startCreateProducts = (data) => {
             })
             productCreatedNotify()
             const currentTime = new Date()
-            const navigate = useNavigate()
             if (new Date(response.data?.biddingStart) < currentTime) {
                 dispatch(setLiveProducts(response.data))
-                navigate('/live')
             } else {
                 dispatch(setUpComingProducts(response.data))
-                navigate('/upcoming')
+                // navigate('/upcoming')
             }
         } catch (err) {
             console.log(err)

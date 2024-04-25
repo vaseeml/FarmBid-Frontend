@@ -6,17 +6,20 @@ import { isEmpty } from 'lodash';
 import axios from 'axios';
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faShoppingCart, faSearch, faUserCircle, faWallet } from '@fortawesome/free-solid-svg-icons';
+import { faShoppingCart, faSearch, faUserCircle, faWallet, faBars } from '@fortawesome/free-solid-svg-icons';
 import ConditionalLink from '../../Private-Routes/Rolebased';
 import { useSelector } from 'react-redux';
 import {  Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
 import { useContext } from 'react'
 import { AuthContext } from '../../contexts/AuthContext'
 
+
+
 export default function Header() {
   const wallet = useSelector((state) => {
     return state.user?.wallet
   })
+  
   const { user  } = useContext(AuthContext)
   const [modal, setModal] = useState(false);
   const [ updateAmount , setUpdateAmount ] = useState('')
@@ -25,6 +28,7 @@ export default function Header() {
   const toggle = () => {
     setModal(!modal)
   }
+
   const handleUpdateAmount = async(e)=>{
     // preventing page reload
     e.preventDefault()
@@ -81,7 +85,9 @@ const handleWallet=()=>{
     }
 }
   return (
+    
     <Navbar bg="success" variant="dark" expand="lg" className="justify-content-between" style={{ height: '70px' }}>
+      {/* {user?.role=='admin' && <button onClick={handleBar}>hi</button>} */}
       <Navbar.Brand style={{ marginLeft: '30px' }}><Nav.Link as={Link} to="/"><img
         src={logo}
         alt="logo"
@@ -97,16 +103,16 @@ const handleWallet=()=>{
         <Form inline className="d-flex justify-content-center">
           <FormControl type="text" placeholder="Search" className="mr-sm-2" style={{ borderRadius: '30px', width: "600px" }} />
           <Button><FontAwesomeIcon icon={faSearch} /></Button>
-          <Dropdown defaultActiveKey="1">
+          {user?.role!=='admin' && <Dropdown activeKey="Live">
             <Dropdown.Toggle variant="success" id="dropdown-basic" title="Live">
                 Live
             </Dropdown.Toggle>
             <Dropdown.Menu>
-              <Dropdown.Item eventKey="1"><Nav.Link as={Link} to="/live">Live</Nav.Link></Dropdown.Item>
-              <Dropdown.Item eventKey="2"><Nav.Link as={Link} to="/upcoming">UpComing</Nav.Link></Dropdown.Item>
-              <Dropdown.Item eventKey="3"><Nav.Link as={Link} to="/completed">Completed</Nav.Link></Dropdown.Item>
+              <Dropdown.Item eventKey="Live"><Nav.Link as={Link} to="/live">Live</Nav.Link></Dropdown.Item>
+              <Dropdown.Item eventKey="Upcoming"><Nav.Link as={Link} to="/upcoming">UpComing</Nav.Link></Dropdown.Item>
+              <Dropdown.Item eventKey="Completed"><Nav.Link as={Link} to="/completed">Completed</Nav.Link></Dropdown.Item>
             </Dropdown.Menu>
-          </Dropdown>
+          </Dropdown>}
         </Form>
       </Navbar.Collapse>
       <Navbar.Collapse id="navbarNav" className="justify-content-end">
@@ -118,10 +124,10 @@ const handleWallet=()=>{
               <Nav.Link as={Link} to="/loginPage">Login</Nav.Link>
             </div>
           )}
-          <h4 style={{fontSize: '1.2rem', color: 'black' }}>
+          {user?.role!=='admin' && <><h4 style={{fontSize: '1.2rem', color: 'black' }}>
           ₹{!isEmpty(localStorage.getItem('token')) && wallet?.balance?.toFixed(2)}
           </h4> 
-          <FontAwesomeIcon icon={faWallet} onClick={handleWallet} style={{ fontSize: "1.5em", color: "white" }} className="mx-3" />
+          <FontAwesomeIcon icon={faWallet} onClick={handleWallet} style={{ fontSize: "1.5em", color: "white" }} className="mx-3" /></>}
           {ConditionalLink('/create-product', ['seller']) && <Nav.Link onClick={handleClick} className='btn btn-primary'>Create Product</Nav.Link>}
         </div>
       </Navbar.Collapse>
@@ -129,7 +135,7 @@ const handleWallet=()=>{
       {
         ConditionalLink('/cart', ['buyer']) && <FontAwesomeIcon icon={faShoppingCart}  style={{ fontSize: "1.5em", color: "orange" }} onClick={handleCart} />
       }
-      <Dropdown>
+      {user?.role!=='admin' && <Dropdown>
         <Dropdown.Toggle variant="success" id="dropdown-basic">
           <FontAwesomeIcon icon={faUserCircle} />
         </Dropdown.Toggle>
@@ -145,7 +151,27 @@ const handleWallet=()=>{
           }
 
         </Dropdown.Menu>
+      </Dropdown>}
+
+      {user?.role=='admin' && !isEmpty(localStorage.getItem('token')) &&<> 
+      <Dropdown>
+        <Dropdown.Toggle variant="success" id="dropdown-basic">
+          <FontAwesomeIcon icon={faBars} />
+        </Dropdown.Toggle>
+        <Dropdown.Menu align="end" placement="bottom-end">
+          <Dropdown.Item header>Choose</Dropdown.Item>
+          <Dropdown.Item><Nav.Link as={Link} to="/sellers">Sellers</Nav.Link></Dropdown.Item>
+          <Dropdown.Item><Nav.Link as={Link} to="/customers">Buyers</Nav.Link></Dropdown.Item>
+          <Dropdown.Item><Nav.Link as={Link} to="/reports">Reports</Nav.Link></Dropdown.Item>
+          <Dropdown.Item divider />
+          {
+            !isEmpty(localStorage.getItem('token')) && <DropdownItem onClick={handleLogout}>Logout</DropdownItem>
+          }
+
+        </Dropdown.Menu>
       </Dropdown>
+              </>
+        }
       <div>
             {user?.role=='buyer' &&
             <Modal isOpen={modal} toggle={toggle}>
