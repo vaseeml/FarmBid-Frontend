@@ -8,25 +8,38 @@ import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faSearch, faUserCircle, faWallet, faBars } from '@fortawesome/free-solid-svg-icons';
 import ConditionalLink from '../../Private-Routes/Rolebased';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {  Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
 import { useContext } from 'react'
 import { AuthContext } from '../../contexts/AuthContext'
+import { getStartCompletedProducts, getStartLiveProducts, startGetUpComingProducts } from '../../actions/product-actions';
 
-
-
-export default function Header() {
+export default function Header({currentPath}) {
+  const [modal, setModal] = useState(false);
+  const [ updateAmount , setUpdateAmount ] = useState('')
+  const [ searchQuery , setSearchQuery ] = useState('')
+  const dispatch = useDispatch()
   const wallet = useSelector((state) => {
     return state.user?.wallet
   })
   
   const { user  } = useContext(AuthContext)
-  const [modal, setModal] = useState(false);
-  const [ updateAmount , setUpdateAmount ] = useState('')
   const navigate = useNavigate()
 
   const toggle = () => {
     setModal(!modal)
+  }
+  const handleSearch = (e)=>{
+    e.preventDefault()
+    if(currentPath == '/live'){
+      dispatch(getStartLiveProducts({role:user?.role, searchQuery:searchQuery}))
+    }
+    else if(currentPath == '/upcoming'){
+      dispatch(startGetUpComingProducts({role:user?.role , searchQuery:searchQuery}))
+    }
+    else if(currentPath == '/completed'){
+      dispatch(getStartCompletedProducts({role:user?.role , searchQuery:searchQuery}))
+    }
   }
 
   const handleUpdateAmount = async(e)=>{
@@ -53,7 +66,7 @@ export default function Header() {
   const handleLogout = () => {
     // remove the token if user logged out
     localStorage.removeItem('token')
-    navigate("/")
+    navigate("/loginPage")
   };
   const handleCart = () => {
     // taking the cart page
@@ -101,8 +114,17 @@ const handleWallet=()=>{
       <Navbar.Collapse id="navbarNav" className="justify-content-end">
 
         <Form inline className="d-flex justify-content-center">
-          <FormControl type="text" placeholder="Search" className="mr-sm-2" style={{ borderRadius: '30px', width: "600px" }} />
-          <Button><FontAwesomeIcon icon={faSearch} /></Button>
+
+          <FormControl 
+          type="text" 
+          value={searchQuery}
+          onChange={(e)=>setSearchQuery(e.target.value)}
+          placeholder="Search..." 
+          className="mr-sm-2" 
+          style={{ borderRadius: '30px', width: "600px" }} 
+          />
+          <Button onClick={handleSearch}><FontAwesomeIcon icon={faSearch} /></Button>
+          <Dropdown defaultActiveKey="1">
           {user?.role!=='admin' && <Dropdown activeKey="Live">
             <Dropdown.Toggle variant="success" id="dropdown-basic" title="Live">
                 Live
@@ -124,10 +146,19 @@ const handleWallet=()=>{
               <Nav.Link as={Link} to="/loginPage">Login</Nav.Link>
             </div>
           )}
-          {user?.role!=='admin' && <><h4 style={{fontSize: '1.2rem', color: 'black' }}>
+          {user?.role!=='admin' &&<Button variant="danger" className="d-flex align-items-center mx-3 " onClick={handleWallet}>
+            <div className="rounded-circle  d-flex justify-content-center align-items-center" style={{ width: '20px', height: '20px', cursor: 'pointer' }}>
+              <FontAwesomeIcon icon={faWallet} style={{ fontSize: "1.5em", color: "white" }} />
+            </div>
+            <div className="ms-2" style={{ fontSize: '1.2rem', color: 'white' }}>
+              ₹{!isEmpty(localStorage.getItem('token')) && wallet?.balance?.toFixed(2)}
+            </div>
+          </Button>
+          {/* <h4 style={{fontSize: '1.2rem', color: 'black' }}>
           ₹{!isEmpty(localStorage.getItem('token')) && wallet?.balance?.toFixed(2)}
           </h4> 
-          <FontAwesomeIcon icon={faWallet} onClick={handleWallet} style={{ fontSize: "1.5em", color: "white" }} className="mx-3" /></>}
+          <FontAwesomeIcon icon={faWallet} onClick={handleWallet} style={{ fontSize: "1.5em", color: "white" }} className="mx-3" /> */}
+          }
           {ConditionalLink('/create-product', ['seller']) && <Nav.Link onClick={handleClick} className='btn btn-primary'>Create Product</Nav.Link>}
         </div>
       </Navbar.Collapse>
@@ -206,107 +237,3 @@ const handleWallet=()=>{
     
   );
 }
-
-// import React, { useState } from 'react';
-// import { Link, useNavigate } from 'react-router-dom';
-// import { Navbar, Nav,  FormControl, Button, Container, InputGroup } from 'react-bootstrap';
-// import { Dropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-// import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-// import { faShoppingCart, faUserCircle, faSearch } from '@fortawesome/free-solid-svg-icons';
-// import logo from '../../assets/logo.png';
-// import { isEmpty } from 'lodash';
-
-// export default function Header() {
-//     const [dropdownOpen, setDropdownOpen] = useState(false);
-//     const [searchQuery, setSearchQuery] = useState('');
-
-//     const toggle = () => setDropdownOpen(prevState => !prevState);
-//     const navigate = useNavigate();
-
-//     const handleLogout = () => {
-//         localStorage.removeItem('token');
-//         navigate('/');
-//     };
-
-//     const handleCart = () => {
-//         navigate('/cart');
-//     };
-
-//     const handleSearch = () => {
-//         // Handle search functionality, e.g., navigate to search results page with searchQuery
-//         console.log('Searching for:', searchQuery);
-//     };
-
-//     return (
-//         <Navbar bg="success" variant="dark" expand="lg">
-//             <Container>
-//                 <Navbar.Brand>
-//                     <Link to="/">
-//                         <img
-//                             src={logo}
-//                             alt="logo"
-//                             width="50"
-//                             height="50"
-//                             className="d-inline-block shadow-sm align-text-top"
-//                             style={{ borderRadius: '50%' }}
-//                         />
-//                     </Link>
-//                 </Navbar.Brand>
-//                 <Navbar.Toggle aria-controls="navbarNav" />
-//                 <Navbar.Collapse id="navbarNav" className="justify-content-center">
-//                     <InputGroup className="mb-3">
-//                         <FormControl
-//                             placeholder="Search"
-//                             value={searchQuery}
-//                             onChange={(e) => setSearchQuery(e.target.value)}
-//                         />
-//                         <InputGroup.Append>
-//                             <Button variant="outline-light" onClick={handleSearch}>
-//                                 <FontAwesomeIcon icon={faSearch} />
-//                             </Button>
-//                         </InputGroup.Append>
-//                     </InputGroup>
-//                 </Navbar.Collapse>
-//                 <Navbar.Collapse id="navbarNav" className="justify-content-end">
-//                     <Nav>
-//                         <Link className="nav-link" to="/create-product">
-//                             Create Product
-//                         </Link>
-//                         {(isEmpty(localStorage.getItem('token'))) ? (
-//                             <>
-//                                 <Link className="nav-link" to="/register">Register</Link>
-//                                 <Link className="nav-link" to="/loginPage">Login</Link>
-//                             </>
-//                         ) : (
-//                             <Nav.Link onClick={handleLogout}>Logout</Nav.Link>
-//                         )}
-//                         <Nav.Link href="#">Service</Nav.Link>
-//                     </Nav>
-//                 </Navbar.Collapse>
-//                 <FontAwesomeIcon
-//                     icon={faShoppingCart}
-//                     size="2x"
-//                     color="blue"
-//                     onClick={handleCart}
-//                     style={{ cursor: 'pointer' }}
-//                 />
-//                 <Dropdown isOpen={dropdownOpen} toggle={toggle}>
-//                     <DropdownToggle caret>
-//                         <div className="profile-icon">
-//                             <FontAwesomeIcon icon={faUserCircle} style={{ color: '#007bff', fontSize: '2rem' }} />
-//                         </div>
-//                     </DropdownToggle>
-//                     <DropdownMenu right>
-//                         <DropdownItem header>Choose</DropdownItem>
-//                         <DropdownItem>My Profile</DropdownItem>
-//                         <DropdownItem>About Us</DropdownItem>
-//                         <DropdownItem>Report</DropdownItem>
-//                         {!isEmpty(localStorage.getItem('token')) && (
-//                             <DropdownItem onClick={handleLogout}>Logout</DropdownItem>
-//                         )}
-//                     </DropdownMenu>
-//                 </Dropdown>
-//             </Container>
-//         </Navbar>
-//     );
-// }

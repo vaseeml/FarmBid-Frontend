@@ -1,7 +1,7 @@
 
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Routes , useLocation} from 'react-router-dom'
 import { useEffect , useState } from 'react'
 import { jwtDecode } from 'jwt-decode'
 import { getStartProduct, getStartLiveProducts, startGetUpComingProducts, getStartCompletedProducts } from './actions/product-actions'
@@ -20,7 +20,6 @@ import LiveProducts from './components/products/LiveProducts'
 import CompletedProducts from './components/products/CompletedProducts'
 import CreateProduct from './components/products/CreateProduct'
 import MyProduct from './components/pages/bid/MyProduct'
-import Bid from './components/pages/bid/Bid'
 import Cart from './components/pages/cart/Cart'
 import PaymentSuccess from './components/payments/PaymentSuccess'
 import { startGetWallet,startGetProfile } from './actions/user-actions'
@@ -38,10 +37,12 @@ import { useContext } from 'react'
 import { AuthContext } from './contexts/AuthContext'
 import PrivateRoute from './Private-Routes/PrivateRoutes'
 import axios from 'axios'
-
+import BidContainer from './components/pages/bid/BidContainer'
 
 function App() {
+  const location = useLocation()
   const [ loggedIn , setLoggedIn ] = useState(false)
+  const [ currentPath , setCurrentPath ] = useState('')
   const dispatch = useDispatch()
   const { user , userDispatch } = useContext(AuthContext)
   useEffect(() => {
@@ -69,9 +70,11 @@ function App() {
           // conditionally dispatching the functions to get data based on role
           console.log('user.role' , user)
           if (auth?.role !== 'admin') {
-            dispatch(getStartLiveProducts(auth?.role))
-            dispatch(getStartCompletedProducts(auth?.role))
-            dispatch(startGetUpComingProducts(auth?.role))
+            const role = auth?.role
+            console.log('role11' , auth?.role)
+            dispatch(getStartLiveProducts({role:role}))
+            dispatch(getStartCompletedProducts({role:role}))
+            dispatch(startGetUpComingProducts({role:role}))
             dispatch(startGetProfile())
             // passing id is optional
             dispatch(startGetWallet(auth?.id))
@@ -88,10 +91,14 @@ function App() {
   const setUserLogin = ()=>{
     setLoggedIn(!loggedIn)
   }
+  useEffect(()=>{
+    console.log('current path' , location.pathname)
+    setCurrentPath(location.pathname)
+  },[location.pathname])
   return (
     <div className="App" >
-       
-      <Header />
+      <Header currentPath={currentPath} />
+
       <Routes>
         <Route path="/" element={ localStorage.getItem('token') ?<LiveProducts/>:<Home/>}/>
         <Route path="/loginPage" element={<LoginForm setUserLogin={setUserLogin}/>} />
@@ -114,7 +121,7 @@ function App() {
         <Route path='/live' element={<LiveProducts />} />
         <Route path='/completed' element={<CompletedProducts />} />
         <Route path='/live/:id/myProduct' element={<MyProduct />} />
-        <Route path='/live/:id/bid' element={<Bid />} />
+        <Route path='/live/:id/bid' element={<BidContainer />} />
         <Route path='/cart' element={
           <PrivateRoute permittedRoles={['buyer']}>
             <Cart/>
