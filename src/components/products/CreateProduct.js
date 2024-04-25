@@ -34,6 +34,7 @@ export default function CreateProduct() {
         formData.append('productVideo', form.productVideo);
         formData.append('biddingStart', form.biddingStart)
         dispatch(startCreateProducts(formData))
+        navigate('/live')
         
     }
     return (

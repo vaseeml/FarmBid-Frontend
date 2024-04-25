@@ -8,22 +8,37 @@ import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faSearch, faUserCircle, faWallet } from '@fortawesome/free-solid-svg-icons';
 import ConditionalLink from '../../Private-Routes/Rolebased';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import {  Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
 import { useContext } from 'react'
 import { AuthContext } from '../../contexts/AuthContext'
+import { getStartCompletedProducts, getStartLiveProducts, startGetUpComingProducts } from '../../actions/product-actions';
 
-export default function Header() {
+export default function Header({currentPath}) {
+  const [modal, setModal] = useState(false);
+  const [ updateAmount , setUpdateAmount ] = useState('')
+  const [ searchQuery , setSearchQuery ] = useState('')
+  const dispatch = useDispatch()
   const wallet = useSelector((state) => {
     return state.user?.wallet
   })
   const { user  } = useContext(AuthContext)
-  const [modal, setModal] = useState(false);
-  const [ updateAmount , setUpdateAmount ] = useState('')
   const navigate = useNavigate()
 
   const toggle = () => {
     setModal(!modal)
+  }
+  const handleSearch = (e)=>{
+    e.preventDefault()
+    if(currentPath == '/live'){
+      dispatch(getStartLiveProducts({role:user?.role, searchQuery:searchQuery}))
+    }
+    else if(currentPath == '/upcoming'){
+      dispatch(startGetUpComingProducts({role:user?.role , searchQuery:searchQuery}))
+    }
+    else if(currentPath == '/completed'){
+      dispatch(getStartCompletedProducts({role:user?.role , searchQuery:searchQuery}))
+    }
   }
   const handleUpdateAmount = async(e)=>{
     // preventing page reload
@@ -49,7 +64,7 @@ export default function Header() {
   const handleLogout = () => {
     // remove the token if user logged out
     localStorage.removeItem('token')
-    navigate("/")
+    navigate("/loginPage")
   };
   const handleCart = () => {
     // taking the cart page
@@ -95,8 +110,15 @@ const handleWallet=()=>{
       <Navbar.Collapse id="navbarNav" className="justify-content-end">
 
         <Form inline className="d-flex justify-content-center">
-          <FormControl type="text" placeholder="Search" className="mr-sm-2" style={{ borderRadius: '30px', width: "600px" }} />
-          <Button><FontAwesomeIcon icon={faSearch} /></Button>
+          <FormControl 
+          type="text" 
+          value={searchQuery}
+          onChange={(e)=>setSearchQuery(e.target.value)}
+          placeholder="Search..." 
+          className="mr-sm-2" 
+          style={{ borderRadius: '30px', width: "600px" }} 
+          />
+          <Button onClick={handleSearch}><FontAwesomeIcon icon={faSearch} /></Button>
           <Dropdown defaultActiveKey="1">
             <Dropdown.Toggle variant="success" id="dropdown-basic" title="Live">
                 Live
@@ -118,10 +140,18 @@ const handleWallet=()=>{
               <Nav.Link as={Link} to="/loginPage">Login</Nav.Link>
             </div>
           )}
-          <h4 style={{fontSize: '1.2rem', color: 'black' }}>
+          <Button variant="danger" className="d-flex align-items-center mx-3 " onClick={handleWallet}>
+            <div className="rounded-circle  d-flex justify-content-center align-items-center" style={{ width: '20px', height: '20px', cursor: 'pointer' }}>
+              <FontAwesomeIcon icon={faWallet} style={{ fontSize: "1.5em", color: "white" }} />
+            </div>
+            <div className="ms-2" style={{ fontSize: '1.2rem', color: 'white' }}>
+              ₹{!isEmpty(localStorage.getItem('token')) && wallet?.balance?.toFixed(2)}
+            </div>
+          </Button>
+          {/* <h4 style={{fontSize: '1.2rem', color: 'black' }}>
           ₹{!isEmpty(localStorage.getItem('token')) && wallet?.balance?.toFixed(2)}
           </h4> 
-          <FontAwesomeIcon icon={faWallet} onClick={handleWallet} style={{ fontSize: "1.5em", color: "white" }} className="mx-3" />
+          <FontAwesomeIcon icon={faWallet} onClick={handleWallet} style={{ fontSize: "1.5em", color: "white" }} className="mx-3" /> */}
           {ConditionalLink('/create-product', ['seller']) && <Nav.Link onClick={handleClick} className='btn btn-primary'>Create Product</Nav.Link>}
         </div>
       </Navbar.Collapse>

@@ -7,6 +7,7 @@ import CountDownTimer from './CountDownTimer';
 import { useAuth } from '../../contexts/AuthContext';
 import { Container, Card, Button, OverlayTrigger, Tooltip, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
+import swal from 'sweetalert'
 export default function UpcomingProducts() {
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -91,6 +92,7 @@ export default function UpcomingProducts() {
                 navigate('/cart')
             }catch(err){
                 console.log(err)
+                swal(err.response.data.error , 'already there!' , 'warning')
             }
         }
         else{
@@ -113,7 +115,7 @@ export default function UpcomingProducts() {
                 <Row xs={1} md={3}>
                 {upcomingProducts.map((ele) => (
                     <Col key={ele._id} >
-                        <Card className='bg-light mb-3' style={{ height: '400px' }}>
+                        <Card className='bg-light mb-3 mt-4' style={{ height: '400px' }}>
                             <Card.Img
                                 src={`http://localhost:3000/${ele.productImg}`} alt='img'
                                 height='200px' width='260px'
@@ -137,7 +139,8 @@ export default function UpcomingProducts() {
                                         <span> Farmer Ph:{ele.sellerId?.phone|| 'seller:'}</span>
                                     </OverlayTrigger>
                                     </div>
-                                    <div className="mb-2">Quantity: {ele.quantity}</div>
+                                    <div className="mb-2">Base Price: {ele.basePrice}Rs</div>
+                                    <div className="mb-1">Quantity: {ele.stock}basket || Weight: {ele.weight?ele.weight:'Not Mentioned'}kgs (per 1 basket)</div>
                                     <div className="d-flex align-items-center position-absolute top-0 end-0">
                                         <CountDownTimer biddingStart={new Date(ele.biddingStart)} onBiddingStart={()=>onBiddingStart(ele._id)}/>
                                     </div>

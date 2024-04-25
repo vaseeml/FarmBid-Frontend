@@ -14,11 +14,12 @@ export const getStartProduct = () => {
     }
 }
 
-export const startGetUpComingProducts = (role)=>{
+export const startGetUpComingProducts = ({role , searchQuery})=>{
+    // console.log('role' , role , 'search' , searchQuery)
     return async(dispatch)=>{
         try{
             // getting upcoming products based on role
-            const response = await axios.get(`http://localhost:3000/api/products/upcoming?role=${role}` , {headers:{
+            const response = await axios.get(`http://localhost:3000/api/products/upcoming?role=${role}&&search=${searchQuery?searchQuery :''}` , {headers:{
                 'Authorization':localStorage.getItem('token')
             }})
             // console.log(response.data)
@@ -35,18 +36,32 @@ export const startCreateProducts = (data) => {
                 headers: { 'Authorization': localStorage.getItem("token") }
             })
             productCreatedNotify()
+            // navigate('/upcoming')
+
             const currentTime = new Date()
             const navigate = useNavigate()
-            if (new Date(response.data?.biddingStart) < currentTime) {
-                dispatch(setLiveProducts(response.data))
+            if (new Date(response.data?.biddingStart) <= currentTime) {
+                dispatch(setLiveCreatedProduct(response.data))
                 navigate('/live')
             } else {
-                dispatch(setUpComingProducts(response.data))
+                dispatch(setUpcomingCreatedProduct(response.data))
                 navigate('/upcoming')
             }
         } catch (err) {
             console.log(err)
         }
+    }
+}
+const setLiveCreatedProduct = (data)=>{
+    return {
+        type:'SET_LIVE_CREATED_PRODUCT',
+        payload:data
+    }
+}
+const setUpcomingCreatedProduct = (data)=>{
+    return {
+        type:'SET_UPCOMING_CREATED_PRODUCT',
+        payload:data
     }
 }
 export const setProducts = (data) => {
@@ -55,12 +70,12 @@ export const setProducts = (data) => {
         payload: data
     }
 }
-export const getStartLiveProducts=(role)=>{
-    console.log('role in live' , role)
+export const getStartLiveProducts=({role , searchQuery})=>{
+    // console.log('role in live' , role)
     return async(dispatch)=>{
         try{
             // getting live products based on role
-            const response = await axios.get(`http://localhost:3000/api/products/live?role=${role}`,{
+            const response = await axios.get(`http://localhost:3000/api/products/live?role=${role}&&search=${searchQuery?searchQuery :''}`,{
                 headers:{'Authorization':localStorage.getItem('token')}
             })
             console.log('populate' , response.data)
@@ -77,12 +92,11 @@ export const setLiveProducts = (data) => {
         payload: data
     }
 }
-export const getStartCompletedProducts=(role)=>{
-    console.log(role)
+export const getStartCompletedProducts=({role , searchQuery})=>{
     return async(dispatch)=>{
         try{
             // getting completed products based on role
-            const response = await axios.get(`http://localhost:3000/api/products/completed?role=${role}`,{
+            const response = await axios.get(`http://localhost:3000/api/products/completed?role=${role}&&search=${searchQuery?searchQuery:''}`,{
                 headers:{'Authorization':localStorage.getItem('token')}
             })
             dispatch(setCompletedProducts(response.data))

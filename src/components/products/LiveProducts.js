@@ -4,7 +4,7 @@ import CountDownTimer from "./CountDownTimer"
 import { removeProductFromLive  , addProductToCompleted} from "../../actions/product-actions"
 import { useAuth } from "../../contexts/AuthContext"
 import { Card, Button, Col , Row , Tooltip , OverlayTrigger, Container ,Carousel} from 'react-bootstrap';
-import { FaClock } from 'react-icons/fa'
+
 export default function LiveProducts(){
     const navigate = useNavigate()
     const dispatch = useDispatch()
@@ -34,7 +34,7 @@ export default function LiveProducts(){
                 {products.map((ele) => (
                 <Col key={ele._id}>
                     <Link to={user?.role === 'seller' ? `/live/${ele._id}/myProduct` : `/live/${ele._id}/bid`} style={{ textDecoration: 'none' }}>
-                    <Card className="bg-light ml-4">
+                    <Card className="bg-light mt-4 ml-4">
                         <Carousel interval={4000}>
                         <Carousel.Item>
                             <img
@@ -55,7 +55,7 @@ export default function LiveProducts(){
                         <div className="d-flex justify-content-start">
                             <Card.Title>Veg. Name: {ele.productName.toUpperCase()}</Card.Title>
                         </div>
-                        <div className="d-flex justify-content-start mb-2">
+                        { user?.role == 'buyer' && <div className="d-flex justify-content-start mb-2">
                             <Card.Title>
                             <OverlayTrigger
                                 placement="top"
@@ -68,12 +68,13 @@ export default function LiveProducts(){
                                 <span>Farmer Ph:{ele.sellerId?.phone || 'seller'}</span>
                             </OverlayTrigger>
                             </Card.Title>
-                        </div>
-                        <div className="mb-2">Quantity: {ele.stock}</div>
+                        </div>}
+                        <div className="mb-2">Base Price: {ele.basePrice}Rs</div>
+                        <div className="mb-1">Quantity: {ele.stock}basket || Weight: {ele.weight?ele.weight:'Not Mentioned'}kgs (per 1 basket)</div>
                         <div className="d-flex align-items-center position-absolute top-0 end-0">
                             {ele.biddingEnd ?
                             <CountDownTimer biddingEnd={new Date(ele.biddingEnd)} onBiddingEnd={() => onBiddingEnd(ele)} />
-                            : <span className="bg-info text-dark p-1 rounded">Bidding Not Started</span>
+                            : <span className="bg-warning text-dark p-1 rounded">Place First Bid</span>
                             }
                         </div>
                         </Card.Body>

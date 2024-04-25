@@ -53,7 +53,7 @@ export default function CompletedProducts(){
       <div className="row">
       {
         completedProducts.map((ele) => (
-          <div className="col-md-3 mb-3" key={ele._id}>
+          <div className="col-md-3 mb-3 mt-4 ml-4" key={ele._id}>
             <Card style={{ margin: '0 10px' }}>
               <Carousel>
                 <Carousel.Item>
@@ -61,11 +61,11 @@ export default function CompletedProducts(){
                     className="d-block w-100"
                     src={`http://localhost:3000/${ele.productImg}`}
                     alt="Product Image"
-                    style={{ maxHeight: '300px' }}
+                    style={{ height: '300px' }}
                   />
                 </Carousel.Item>
                 <Carousel.Item>
-                  <video controls autoPlay muted  className="d-block w-100" style={{ maxHeight: '300px' }}>
+                  <video controls autoPlay muted  className="d-block w-100" style={{ height: '300px' }}>
                     <source src={`http://localhost:3000/${ele.productVideo}`} type="video/mp4" />
                   </video>
                 </Carousel.Item>
