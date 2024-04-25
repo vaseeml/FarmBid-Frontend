@@ -46,6 +46,7 @@ export default function LiveBids({ productId ,previousBids, updateLatestBids}){
             <ul>
             {previousBids?.map((bid) => (
                 <li className={`list-group-item ${bid.sender === 'buyer' ? 'buyer' : 'seller'}`} key={bid._id}>
+
                 <div className="d-flex w-100 justify-content-between">
                 <h5 className="mb-1">{bid.bidderId?.username}</h5>
                 <small>{formatTimestamp(bid.createdAt)}</small>

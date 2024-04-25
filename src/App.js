@@ -38,6 +38,7 @@ import { AuthContext } from './contexts/AuthContext'
 import PrivateRoute from './Private-Routes/PrivateRoutes'
 import axios from 'axios'
 import BidContainer from './components/pages/bid/BidContainer'
+
 function App() {
   const location = useLocation()
   const [ loggedIn , setLoggedIn ] = useState(false)
@@ -97,6 +98,7 @@ function App() {
   return (
     <div className="App" >
       <Header currentPath={currentPath} />
+
       <Routes>
         <Route path="/" element={ localStorage.getItem('token') ?<LiveProducts/>:<Home/>}/>
         <Route path="/loginPage" element={<LoginForm setUserLogin={setUserLogin}/>} />
