@@ -103,7 +103,7 @@ export default function CreateProduct() {
                         className="form-control"
                         id="productImg"
                         name="productImg"
-
+                        
                         onChange={handleInputChange}
                     />
                 </div>

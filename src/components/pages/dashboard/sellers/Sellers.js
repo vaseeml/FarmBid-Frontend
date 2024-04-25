@@ -13,6 +13,9 @@ export default function Sellers() {
     const handleClick = (id) => {
         navigate(`/view/${id}/seller`)
     }
+    const handleBlock = () => {
+        navigate('/blocked/sellers')
+    }
     const columns = [
         {
             name: 'Name',
@@ -57,6 +60,9 @@ export default function Sellers() {
                             placeholder='Search'
                         />
                     </Form>
+                </Col>
+                <Col style={{marginLeft:'900px'}}>
+                    <button className='btn btn-danger' onClick={handleBlock}>Viewe Blocked Sellers</button>
                 </Col>
             </Row>
             <h2>Total Sellers</h2>
