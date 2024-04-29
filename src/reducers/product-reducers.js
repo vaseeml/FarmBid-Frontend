@@ -61,6 +61,9 @@ export const productReducer = (state = initialState, action) => {
                 ...state , completedProducts:[...state.completedProducts , action.payload]
             }
         }
+        case 'SERVER_ERRORS':{
+            return{...state,serverErrors:action.payload}
+        }
         default: {
             return { ...state }
         }

@@ -4,6 +4,7 @@ import CountDownTimer from "./CountDownTimer"
 import { removeProductFromLive  , addProductToCompleted} from "../../actions/product-actions"
 import { useAuth } from "../../contexts/AuthContext"
 import { Card, Button, Col , Row , Tooltip , OverlayTrigger, Container ,Carousel} from 'react-bootstrap';
+import SearchCity from "./SearchCity"
 
 export default function LiveProducts(){
     const navigate = useNavigate()
@@ -29,24 +30,31 @@ export default function LiveProducts(){
     }
     console.log('live page ' ,products)
     return (
+        <>
+        <SearchCity/>
         <Container>
             <Row xs={1} md={3}>
                 {products.map((ele) => (
-                <Col key={ele._id}>
+                    <Col key={ele._id}>
                     <Link to={user?.role === 'seller' ? `/live/${ele._id}/myProduct` : `/live/${ele._id}/bid`} style={{ textDecoration: 'none' }}>
                     <Card className="bg-light mt-4 ml-4">
-                        <Carousel interval={4000}>
+                        <Carousel interval={3000} controls={false} indicators={false}>
+                        
+                            {ele.productImg.map((ele)=>{
+                            return <Carousel.Item>
+                                <img
+                                src={`http://localhost:3000/${ele}`}
+                                alt="Product Image"
+                                height="300px"
+                                width="260px"
+                                className="d-block w-100"
+                                />
+                                </Carousel.Item>
+                            })}
+                            
+                        
                         <Carousel.Item>
-                            <img
-                            src={`http://localhost:3000/${ele.productImg}`}
-                            alt="Product Image"
-                            height="300px"
-                            width="260px"
-                            className="d-block w-100"
-                            />
-                        </Carousel.Item>
-                        <Carousel.Item>
-                            <video autoPlay muted loop className="d-block w-100" style={{ maxHeight: '300px' }}>
+                            <video autoPlay muted loop className="d-block w-100" style={{ height: '300px' }}>
                             <source src={`http://localhost:3000/${ele.productVideo}`} type="video/mp4" />
                             </video>
                         </Carousel.Item>
@@ -87,6 +95,6 @@ export default function LiveProducts(){
                 ))}
             </Row>
         </Container>
-
+        </>
     )
 }

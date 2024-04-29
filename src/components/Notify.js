@@ -24,8 +24,20 @@ export const registrationNotify = ()=>{
 }
 
 export const productCreatedNotify = ()=>{
-    toast.success('Product create successful!', {
+    toast.success('Product created successful!', {
         position: 'top-left',
+        autoClose: 2000, // Close the toast after 3 seconds
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined
+    })
+}
+
+export const profileCreatedNotify = ()=>{
+    toast.success('Profile created successful!', {
+        position: 'top-right',
         autoClose: 2000, // Close the toast after 3 seconds
         hideProgressBar: false,
         closeOnClick: true,
