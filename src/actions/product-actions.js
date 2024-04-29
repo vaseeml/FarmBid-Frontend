@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { productCreatedNotify } from '../components/Notify'
-import { useNavigate } from 'react-router-dom'
 
 export const getStartProduct = () => {
     return async (dispatch) => {
@@ -29,7 +28,7 @@ export const startGetUpComingProducts = ({role , searchQuery})=>{
         }
     }
 }
-export const startCreateProducts = (data) => {
+export const startCreateProducts = (data,navigate) => {
     return async (dispatch) => {
         try {
             const response = await axios.post('http://localhost:3000/api/create/product', data, {
@@ -39,7 +38,6 @@ export const startCreateProducts = (data) => {
             // navigate('/upcoming')
 
             const currentTime = new Date()
-            const navigate = useNavigate()
             if (new Date(response.data?.biddingStart) <= currentTime) {
                 dispatch(setLiveCreatedProduct(response.data))
                 navigate('/live')
@@ -47,9 +45,17 @@ export const startCreateProducts = (data) => {
                 dispatch(setUpcomingCreatedProduct(response.data))
                 navigate('/upcoming')
             }
+            dispatch(setErrors([]))
         } catch (err) {
             console.log(err)
+            dispatch(setErrors(err.response?.data?.errors))
         }
+    }
+}
+const setErrors=(data)=>{
+    return{
+        type:'SERVER_ERRORS',
+        payload:data
     }
 }
 const setLiveCreatedProduct = (data)=>{
@@ -149,8 +155,10 @@ export const startEditProduct = (id, formData) => {
                 }
             })
             dispatch(editProduct(response.data))
+            dispatch(setErrors([]))
         } catch (err) {
             console.log(err)
+            dispatch(setErrors(err.response?.data?.errors))
         }
     }
 }
