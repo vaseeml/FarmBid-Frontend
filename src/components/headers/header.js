@@ -62,7 +62,14 @@ export default function Header({currentPath}) {
         console.log(err)
     }
   }
-
+ 
+  const handleTransactionHistory = ()=>{
+    if(localStorage.getItem('token')){
+      navigate('/transactions')
+    } else{
+      navigate('/loginPage')
+    }
+  }
   const handleLogout = () => {
     // remove the token if user logged out
     localStorage.removeItem('token')
@@ -124,7 +131,7 @@ const handleWallet=()=>{
           style={{ borderRadius: '30px', width: "600px" }} 
           />
           <Button onClick={handleSearch}><FontAwesomeIcon icon={faSearch} /></Button>
-          <Dropdown defaultActiveKey="1">
+
           {user?.role!=='admin' && <Dropdown activeKey="Live">
             <Dropdown.Toggle variant="success" id="dropdown-basic" title="Live">
                 Live
@@ -154,10 +161,6 @@ const handleWallet=()=>{
               ₹{!isEmpty(localStorage.getItem('token')) && wallet?.balance?.toFixed(2)}
             </div>
           </Button>
-          {/* <h4 style={{fontSize: '1.2rem', color: 'black' }}>
-          ₹{!isEmpty(localStorage.getItem('token')) && wallet?.balance?.toFixed(2)}
-          </h4> 
-          <FontAwesomeIcon icon={faWallet} onClick={handleWallet} style={{ fontSize: "1.5em", color: "white" }} className="mx-3" /> */}
           }
           {ConditionalLink('/create-product', ['seller']) && <Nav.Link onClick={handleClick} className='btn btn-primary'>Create Product</Nav.Link>}
         </div>
@@ -173,6 +176,7 @@ const handleWallet=()=>{
         <Dropdown.Menu align="end" placement="bottom-end">
           <Dropdown.Item header>Choose</Dropdown.Item>
           <Dropdown.Item><Nav.Link onClick={handleProfile}>My Profile</Nav.Link></Dropdown.Item>
+          { user?.role == 'buyer' && <Dropdown.Item><Nav.Link onClick={handleTransactionHistory}>Transaction History</Nav.Link></Dropdown.Item>}
           <Dropdown.Item>About Us</Dropdown.Item>
           <Dropdown.Item>See Trends</Dropdown.Item>
           <Dropdown.Item>Report</Dropdown.Item>

@@ -2,6 +2,7 @@ import { useSelector } from 'react-redux'
 import {Modal ,Card ,Button , Carousel} from 'react-bootstrap'
 import { useState } from 'react'
 import axios from 'axios'
+import SearchCity from './SearchCity'
 export default function CompletedProducts(){
     const [showModal, setShowModal] = useState(false)
     const [ buyerInfo , setBuyerInfo ] = useState({})
@@ -51,11 +52,12 @@ export default function CompletedProducts(){
     }
     return (
       <div className="row">
+        <SearchCity/>
       {
         completedProducts.map((ele) => (
           <div className="col-md-3 mb-3 mt-4 ml-4" key={ele._id}>
             <Card style={{ margin: '0 10px' }}>
-              <Carousel>
+              <Carousel interval={3000} controls={false} indicators={false}>
                 <Carousel.Item>
                   <img
                     className="d-block w-100"

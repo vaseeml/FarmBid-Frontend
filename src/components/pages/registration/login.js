@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import swal from 'sweetalert'
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios'
@@ -24,7 +23,15 @@ const LoginForm = ({setUserLogin}) => {
     loginId: Yup.string().required('Email/Phone is required'),
     password: Yup.string().required('Password is required'),
   });
+    console.log(serverErrors)
 
+    const helperFunction=(name)=>{
+      return serverErrors?.filter((ele)=>{
+        return ele.path===name
+    }).map((ele,i)=>{
+        return<li key={i}>{ele.msg}</li>
+    })
+    }
   // Handle form submission
   const handleSubmit = async(values) => {
     try{
@@ -57,16 +64,20 @@ const LoginForm = ({setUserLogin}) => {
         onSubmit={handleSubmit}
       >
           <Form>
-            <FormGroup controlId="email">
-              <FormLabel>Email</FormLabel>
+          {serverErrors?.length>0&&<p style={{color:'red'}}>{helperFunction('loginId')}</p>}
+          {serverErrors?.length>0&&<p style={{color:'red'}}>{helperFunction('password')}</p>}
+
+            <FormGroup controlId="loginId">
+              <FormLabel>Email/Phone</FormLabel>
               <Field
                 size='lg'
                 type="text"
                 name="loginId"
-                placeholder="Enter email/phone"
+                placeholder="Enter Email/phone"
                 as={FormControl}
               />
               <ErrorMessage name="loginId" component="div" className="text-danger" />
+              {/* {serverErrors?.length>0&&<p style={{color:'red'}}>{helperFunction('loginId')}</p>} */}
             </FormGroup>
 
             <FormGroup controlId="password">
@@ -79,6 +90,7 @@ const LoginForm = ({setUserLogin}) => {
                 as={FormControl}
               />
               <ErrorMessage name="password" component="div" className="text-danger" />
+
             </FormGroup>
 
             <Button type="submit" >Login</Button><br/>

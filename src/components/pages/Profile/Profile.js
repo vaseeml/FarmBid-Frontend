@@ -7,6 +7,7 @@ import axios from 'axios';
 import { setProfile } from '../../../actions/user-actions';
 import { useState, useRef, useEffect } from 'react';
 import { Container, Row, Col, Image, Button } from 'react-bootstrap';
+import { profileCreatedNotify } from '../../Notify';
 export default function CreateProfile() {
     const profile = useSelector((state) => {
         return state.user.profile
@@ -18,6 +19,8 @@ export default function CreateProfile() {
     const [showFileInput, setShowFileInput] = useState(false);
     const fileInputRef = useRef(null);
     const [chosenFile, setChosenFile] = useState(null);
+    const [errors,setErrors] = useState({})
+    const [serverErrors,setServerErrors]=useState([])
     const [form, setForm] = useState({
         name: '',
         phone: '',
@@ -25,6 +28,32 @@ export default function CreateProfile() {
         image: '',
         description: ''
     })
+    
+    const clientErrors={}
+    const runValidation=()=>{
+        if(form.name.trim().length==0){
+            clientErrors.name='Name is required'
+        }
+        if(form.address.trim().length==0){
+            clientErrors.address='Address is required'
+        }
+        if(form.image.length==0){
+            clientErrors.image='image is required'
+        }
+        if(form.description.trim().length==0){
+            clientErrors.description='Description is required'
+        }
+        setErrors(clientErrors)
+        return clientErrors
+    }
+
+    const helperFunction=(value)=>{
+        serverErrors.filter((ele)=>{
+            return ele.path===value
+        }).map((ele,i)=>{
+            return <li key={i}>{ele.msg}</li>
+        })
+    }
 
     useEffect(() => {
         if (profile) {
@@ -47,6 +76,8 @@ export default function CreateProfile() {
 
     const handleSubmit = async (e) => {
         e.preventDefault()
+        const validationErrors=runValidation()
+        if(Object.keys(validationErrors).length==0){
         const formData = new FormData();
         formData.append('name', form.name);
         formData.append('phone', form.phone);
@@ -60,10 +91,15 @@ export default function CreateProfile() {
             })
             console.log(response.data)
             dispatch(setProfile(response.data))
+            profileCreatedNotify()
             navigate('/login-sucess')
         } catch (err) {
             console.log(err)
+            setServerErrors(err.response.data.errors)
         }
+    }else{
+        setErrors(validationErrors)
+    }
 
     };
     const handleEditImage = () => {
@@ -80,6 +116,8 @@ export default function CreateProfile() {
     const handleSave = async (e) => {
         e.preventDefault()
         setDisabled(true)
+        const validationErrors=runValidation()
+        if(Object.keys(validationErrors).length==0){
         const formData = new FormData();
         formData.append('name', form.name);
         formData.append('address', form.address);
@@ -95,10 +133,14 @@ export default function CreateProfile() {
                 'Content-Type': 'multipart/form-data'
             })
             console.log(response.data)
+            profileCreatedNotify()
             // dispatch(setProfile(response.data))
             // navigate('/login-sucess')
         } catch (err) {
-            console.log(err.message)
+            console.log(err)
+            setServerErrors(err.response.data.errors)
+        }}else{
+            setErrors(validationErrors)
         }
 
     }
@@ -140,6 +182,8 @@ export default function CreateProfile() {
                                     onChange={handleInputChange}
                                     disabled={disabled}
                                 />
+                                {form.name.length==0 && <p style={{color:'red'}}>{errors.name}</p>}
+                                {serverErrors.length>0 && <p style={{color:'red'}}>{helperFunction('name')}</p>}
                             </div>
                             <div className="form-group">
                                 <label htmlFor="phone">Phone</label>
@@ -150,6 +194,7 @@ export default function CreateProfile() {
                                     value={form.phone}
                                     disabled={true}
                                 />
+                                
                             </div>
                             <div className='form-group'>
                                 <label htmlFor='address'>Address</label>
@@ -161,6 +206,8 @@ export default function CreateProfile() {
                                     onChange={handleInputChange}
                                     disabled={disabled}
                                 />
+                                {form.address.length==0 && <p style={{color:'red'}}>{errors.address}</p>}
+                                {serverErrors.length>0 && <p style={{color:'red'}}>{helperFunction('address')}</p>}
                             </div>
                             <div className="form-group">
                                 <label htmlFor="description">Description</label>
@@ -172,6 +219,8 @@ export default function CreateProfile() {
                                     onChange={handleInputChange}
                                     disabled={disabled}
                                 />
+                                {form.description.length==0 && <p style={{color:'red'}}>{errors.description}</p>}
+                                {serverErrors.length>0 && <p style={{color:'red'}}>{helperFunction('description')}</p>}
                             </div>
                             <Button onClick={handleEdit} disabled={!disabled}>Edit</Button>
                             <Button onClick={handleSave}>Save</Button>
@@ -195,20 +244,10 @@ export default function CreateProfile() {
                                             value={form.name}
                                             onChange={handleInputChange}
                                         />
+                                        {form.name.length==0 && <p style={{color:'red'}}>{errors.name}</p>}
+                                        {serverErrors.length>0 && <p style={{color:'red'}}>{helperFunction('name')}</p>}
                                     </div>
-                                    <div className="form-group">
-                                        <label htmlFor="phone">Phone</label>
-                                        <input
-                                            type="text"
-                                            placeholder='ex:9876543210'
-                                            className="form-control"
-                                            id="phone"
-                                            name="phone"
-                                            value={form.phone}
-                                            onChange={handleInputChange}
-                                        />
-                                    </div>
-                                    <div className='form-group'>
+                                   <div className='form-group'>
                                         <label htmlFor='address'>Address</label>
                                         <input
                                             type="text"
@@ -219,6 +258,9 @@ export default function CreateProfile() {
                                             value={form.address}
                                             onChange={handleInputChange}
                                         />
+                                        {form.address.length==0 && <p style={{color:'red'}}>{errors.address}</p>}
+                                        {serverErrors.length>0 && <p style={{color:'red'}}>{helperFunction('address')}</p>}
+                                        
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="image">Image</label>
@@ -230,6 +272,7 @@ export default function CreateProfile() {
                                             name="image"
                                             onChange={handleInputChange}
                                         />
+                                        {form.image.length==0 && <p style={{color:'red'}}>{errors.image}</p>}
                                     </div>
                                     <div className="form-group">
                                         <label htmlFor="description">Description</label>
@@ -242,6 +285,9 @@ export default function CreateProfile() {
                                             value={form.description}
                                             onChange={handleInputChange}
                                         />
+                                        {form.description.length==0 && <p style={{color:'red'}}>{errors.description}</p>}
+                                        {serverErrors.length>0 && <p style={{color:'red'}}>{helperFunction('description')}</p>}
+
                                     </div>
 
                                     <input type="submit" className="btn btn-primary" />
