@@ -17,6 +17,20 @@ export default function LiveBids({ productId ,previousBids, updateLatestBids}){
         const formatedTime = `${hours}:${minutes < 10 ? '0' : ''}${minutes} ${ampm}`
         return formatedTime
     }
+    // useEffect(()=>{
+    //     (async()=>{
+    //         try{
+    //             const response = await axios.get(`http://localhost:3000/api/product/${productId}/bids` , {
+    //                 headers:{
+    //                     'Authorization':localStorage.getItem('token')
+    //                 }
+    //             })
+    //             setProductBids(response.data)
+    //         } catch(err){
+    //             console.log(err)
+    //         }
+    //     })()
+    // } , [])
     const handleClick = async()=>{
         const formData = {
             amount:Number(number),

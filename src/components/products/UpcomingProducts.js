@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios'
-import { useReducer, useState } from 'react';
+import { useState } from 'react';
 import {  Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { startEditProduct , setDeleteProduct , removeProductFromUpcoming , addProductToLive } from '../../actions/product-actions';
 import CountDownTimer from './CountDownTimer';
@@ -30,7 +30,7 @@ export default function UpcomingProducts() {
     };
 
     const handleEdit = (id) => {
-        const product = upcomingProducts.find((ele) => ele._id == id);
+        const product = upcomingProducts.find((ele) => ele._id === id);
         setForm({
             productName: product.productName || '',
             stock: product.stock || '',
@@ -76,7 +76,7 @@ export default function UpcomingProducts() {
     }
     const handleClick = async(id)=>{
         // checking the role before making api requests
-        if(user?.role == 'buyer'){
+        if(user?.role === 'buyer'){
             try{
                 const formData = {
                     product:id,
@@ -145,9 +145,9 @@ export default function UpcomingProducts() {
                                         <CountDownTimer biddingStart={new Date(ele.biddingStart)} onBiddingStart={()=>onBiddingStart(ele._id)}/>
                                     </div>
                                     <div className="d-flex justify-content-between align-items-center mt-2">
-                                    {user?.role == 'buyer' && <Button variant="success" size="sm" className="me-2" onClick={()=>handleClick(ele._id)}>Add to Cart</Button> }
-                                    {user?.role == 'seller' && <Button variant="warning" size="sm" className="me-2" onClick={() => { handleEdit(ele._id) }} >Edit</Button> }
-                                    {user?.role == 'seller' && <Button variant="danger" size="sm" onClick={() => { handleDelete(ele._id) }}>Delete</Button> }
+                                    {user?.role === 'buyer' && <Button variant="success" size="sm" className="me-2" onClick={()=>handleClick(ele._id)}>Add to Cart</Button> }
+                                    {user?.role === 'seller' && <Button variant="warning" size="sm" className="me-2" onClick={() => { handleEdit(ele._id) }} >Edit</Button> }
+                                    {user?.role === 'seller' && <Button variant="danger" size="sm" onClick={() => { handleDelete(ele._id) }}>Delete</Button> }
                                     </div>
                             </Card.Body>
                         </Card>

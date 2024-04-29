@@ -1,0 +1,22 @@
+/* Footer.css */
+
+.footer {
+    background-color: #2f3f52;
+    color: #ffffff;
+    padding: 30px 0;
+  }
+  
+  .footer h5 {
+    color: #ffffff;
+  }
+  
+  .footer p {
+    color: #cccccc;
+  }
+  
+  .footer p:hover {
+    color: #ffffff;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  

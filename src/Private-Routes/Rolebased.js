@@ -1,4 +1,4 @@
-import { Link, Navigate } from "react-router-dom";
+import {  Navigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext";
 
 export default function ConditionalLink(path , role){
@@ -13,6 +13,9 @@ export default function ConditionalLink(path , role){
             if(role.includes(user?.role)){
                 return <Navigate to={path}/>
             }
+        }
+        default:{
+            return <Navigate to='/loginPage'/>
         }
     }
 }
