@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { Navigate } from 'react-router-dom'
 
 export const startWalletUpdate = (stripeId)=>{
     return async(dispatch)=>{
@@ -13,6 +14,7 @@ export const startWalletUpdate = (stripeId)=>{
             // const response = await Promise.all([paymentUpdate , walletUpdate])
             // console.log('response after promise' , response.data)
             dispatch(setWallet(response.data))
+            Navigate('/live')
         }catch(err){
             console.log(err)
         }

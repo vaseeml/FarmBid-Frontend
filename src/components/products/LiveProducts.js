@@ -14,10 +14,10 @@ export default function LiveProducts(){
         return state.products.liveProducts
     })
     const handleClick = async(id)=>{
-        if(user?.role == 'seller'){
+        if(user?.role === 'seller'){
             navigate(`/live/${id}/myProduct`)
         }
-        if(user?.role == 'buyer'){
+        if(user?.role === 'buyer'){
             navigate(`/live/${id}/bid`)
         }
     }
@@ -54,6 +54,15 @@ export default function LiveProducts(){
                             
                         
                         <Carousel.Item>
+                            <img
+                            src={`http://localhost:3000/${ele.productImg}`}
+                            alt="Product"
+                            height="300px"
+                            width="260px"
+                            className="d-block w-100"
+                            />
+                        </Carousel.Item>
+                        <Carousel.Item>
                             <video autoPlay muted loop className="d-block w-100" style={{ height: '300px' }}>
                             <source src={`http://localhost:3000/${ele.productVideo}`} type="video/mp4" />
                             </video>
@@ -63,7 +72,7 @@ export default function LiveProducts(){
                         <div className="d-flex justify-content-start">
                             <Card.Title>Veg. Name: {ele.productName.toUpperCase()}</Card.Title>
                         </div>
-                        { user?.role == 'buyer' && <div className="d-flex justify-content-start mb-2">
+                        { user?.role === 'buyer' && <div className="d-flex justify-content-start mb-2">
                             <Card.Title>
                             <OverlayTrigger
                                 placement="top"

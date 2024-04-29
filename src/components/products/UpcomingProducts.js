@@ -159,7 +159,7 @@ export default function UpcomingProducts() {
     console.log('form',form)
     const handleClick = async(id)=>{
         // checking the role before making api requests
-        if(user?.role == 'buyer'){
+        if(user?.role === 'buyer'){
             try{
                 const formData = {
                     product:id,

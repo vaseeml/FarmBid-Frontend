@@ -14,10 +14,10 @@ export default function PaymentSuccess(){
                 console.log(err)
             }
         })()
-    },[])
+    },[dispatch])
     return (
         <div>
-
+            
         </div>
     )
 }
