@@ -17,8 +17,9 @@ export default function WalletTransactions() {
                     headers: {
                         'Authorization': localStorage.getItem('token')
                     }
-                });
-                setWalletTransactions(response.data)
+                })
+                const sortedTransactions = response.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                setWalletTransactions(sortedTransactions)
 
             } catch (err) {
                 console.log(err);

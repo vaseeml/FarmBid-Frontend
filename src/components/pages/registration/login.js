@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import axios from 'axios'
@@ -8,9 +8,11 @@ import { useAuth } from '../../../contexts/AuthContext';
 import { loginNotify } from '../../Notify';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
-
+import { gapi } from 'gapi-script';
+import loginbg from '../../../assets/login-bg.avif';
 const LoginForm = ({setUserLogin}) => {
   const [serverErrors,setServerErrors]=useState([])
+  const [ clientId , setClientId ] = useState('')
   const navigate=useNavigate()
   const { userDispatch } = useAuth()
   const initialValues = {
@@ -51,9 +53,67 @@ const LoginForm = ({setUserLogin}) => {
       setServerErrors(err.response.data.errors)
     }
   };
+  useEffect(()=>{
+    (async()=>{
+      try{
+        const response = await axios.get('http://localhost:3000/api/google-clientId')
+        console.log(response.data.clientId)
+        setClientId(response.data.clientId)
+      } catch(err){
+        alert(err)
+        console.log(err)
+      }
+    })();
+  },[])
+  const handleGoogleSignIn = ()=>{
+    if(window.gapi){
+      console.log('byeeee')
+      console.log(gapi)
+      window.gapi.load('auth2')
+      initGoogleSignIn()
+    } else{
+      window.onload = initGoogleSignIn 
+    }  
+  }
+  const initGoogleSignIn = async()=>{
+    try{
+      await window.gapi.auth2?.init({
+        client_id : '242537127655-sgivplruev8nfu7gru7m01qslimqdj61.apps.googleusercontent.com',
+        scope: "email",
+        plugin_name:'FarmBid-Connect'
+      })
+      const auth2 = window.gapi.auth2?.getAuthInstance();
+        const googleUser = await auth2?.signIn()
+        const token = googleUser?.getAuthResponse().id_token
+        if(token){
+          const response = await axios.post('http://localhost:3000/api/google/login' , {token})
+        localStorage.setItem('token' , response.data.token)
+        setServerErrors("")
+        userDispatch({type:'SET_USER' , payload:response.data.user})
+        setUserLogin()
+        if(response.data.user?.role !== 'admin'){
+          navigate('/live')
+        }else{
+          navigate('/dashboard')
+        }
+        loginNotify()
+        }
+      
+    } catch(err){
+      console.log(err)
+      alert(err.error)
+    }
+  }
 
   return (
-    <div className="d-flex justify-content-center align-items-center vh-100">
+  //   <div  style={{
+  //     backgroundImage: `url(${loginbg})`,
+  //     backgroundSize: 'cover',
+  //     backgroundRepeat: 'no-repeat',
+  //     backgroundPosition: 'center',
+  //     minHeight: '100vh', // Ensure the div covers the entire viewport height
+  // }}>
+    <div className="d-flex justify-content-center align-items-center vh-100" >
     <div className="card p-4" >
         <h2 className="mb-4 d-flex align-items-center justify-content-between">Login
         <FontAwesomeIcon icon={faUser} className="ml-2" style={{color:'black'}} />
@@ -66,6 +126,7 @@ const LoginForm = ({setUserLogin}) => {
           <Form>
           {serverErrors?.length>0&&<p style={{color:'red'}}>{helperFunction('loginId')}</p>}
           {serverErrors?.length>0&&<p style={{color:'red'}}>{helperFunction('password')}</p>}
+          {serverErrors?.length>0 && <p style={{color:'red'}}>{helperFunction('blocked')}</p>}
 
             <FormGroup controlId="loginId">
               <FormLabel>Email/Phone</FormLabel>
@@ -97,9 +158,11 @@ const LoginForm = ({setUserLogin}) => {
             <Link to='/forgot-password'>Forgot Password?</Link> <br /> <Link to='/register'>New User! Register Here </Link>
           </Form>
       </Formik>
+      or
+      <Button onClick={handleGoogleSignIn}>SignIn With Google</Button>
       </div>
     </div>
-  
+    // </div> 
   );
 };
 

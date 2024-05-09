@@ -41,7 +41,7 @@ export default function CountDownTimer(props){
     return (
         <div>
             {props.biddingStart?<p><IoTime color='green' /> Time Left: {timeRemaining.days}d {timeRemaining.hours}h {timeRemaining.minutes}m {timeRemaining.seconds}s</p>:
-            <span  className="bg-warning text-dark p-1 rounded" ><IoTime color='black' /> {timeRemaining.minutes}m {timeRemaining.seconds}s Ends</span>
+            <span  className="bg-warning text-dark p-1 rounded" ><IoTime color='black' /> {timeRemaining.minutes >= 0 ?`${timeRemaining.minutes}m ${timeRemaining.seconds}s Ends` :'Time Ended'}</span>
             }
         </div>
     )

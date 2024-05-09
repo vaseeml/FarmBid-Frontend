@@ -36,7 +36,8 @@ export default function CreateProduct() {
         cities:'',
         productImg: [],
         productVideo: '',
-        biddingStart: ''
+        biddingStart: '',
+        biddingEnd: ''
     });
     const clientErrors={}
     const runValidation = () => {
@@ -63,11 +64,19 @@ export default function CreateProduct() {
         }
         if (form.biddingStart.length === 0) {
             clientErrors.biddingStart = 'Enter biddingStart';
-        }else {
-            const selectedDateTime = new Date(form.biddingStart).getTime();
+        }
+        if (form.biddingEnd.length === 0) {
+            clientErrors.biddingEnd = 'Enter biddingEnd';
+        }
+        else{
+            const biddingStartDate = new Date(form.biddingStart).getTime();
+            const biddingEndDate = new Date(form.biddingEnd).getTime();
             const currentDateTime = new Date().getTime();
-            if (selectedDateTime <= currentDateTime) {
-                clientErrors.biddingStart = 'Bid start time should be greater than the current time.';
+            if (biddingStartDate <= currentDateTime) {
+                clientErrors.biddingStart = 'Bid Start Time Should Be Greater Than Current Time.';
+            }
+            if(biddingEndDate <= biddingStartDate){
+                clientErrors.biddingEnd = 'Bid End Time Should Be Greater Than Bidding Start Time'
             }
         }
         setErrors(clientErrors);
@@ -103,10 +112,11 @@ export default function CreateProduct() {
         formData.append('weight', form.weight)
         formData.append('basePrice', form.basePrice);
         formData.append('address', form.address);
-        formData.append('cities', form.cities.value);
+        formData.append('cities', form.cities?.value);
         form.productImg.forEach((image) => formData.append('productImg', image)); // Append each image
         formData.append('productVideo', form.productVideo);
         formData.append('biddingStart', form.biddingStart)
+        formData.append('biddingEnd', form.biddingEnd)
         dispatch(startCreateProducts(formData,navigate))
         setErrors('')
         }
@@ -247,6 +257,20 @@ export default function CreateProduct() {
                         onChange={handleInputChange}
                     />
                     {errors.biddingStart&&<p style={{color:'red'}}>{errors.biddingStart}</p>}
+
+                </div>
+                <div className="form-group">
+                    <label htmlFor="biddingEnd">BidEndDate</label>
+                    <input
+                        type="datetime-local"
+                        className="form-control"
+                        id="biddingEnd"
+                        name="biddingEnd"
+                        value={form.biddingEnd}
+                        min={minDateTime} 
+                        onChange={handleInputChange}
+                    />
+                    {errors.biddingEnd&&<p style={{color:'red'}}>{errors.biddingEnd}</p>}
 
                 </div>
                 <input type="submit" className="btn btn-primary" />

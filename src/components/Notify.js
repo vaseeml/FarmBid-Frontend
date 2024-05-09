@@ -46,3 +46,25 @@ export const profileCreatedNotify = ()=>{
         progress: undefined
     })
 }
+export const profileUpdateNotify = ()=>{
+    toast.success('Profile update successful!', {
+        position: 'top-right',
+        autoClose: 2000, // Close the toast after 3 seconds
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined
+    })
+}
+export const newBidPlacedNotify = ()=>{
+    toast.success('New Bid!', {
+        position: 'top-right',
+        autoClose: 2000, // Close the toast after 3 seconds
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined
+    })
+}

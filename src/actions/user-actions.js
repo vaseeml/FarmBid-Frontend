@@ -1,7 +1,6 @@
 import axios from 'axios'
-import { Navigate } from 'react-router-dom'
-
-export const startWalletUpdate = (stripeId)=>{
+import swal from 'sweetalert'
+export const startWalletUpdate = (stripeId , navigate)=>{
     return async(dispatch)=>{
         try{
             // payment updating with transaction id
@@ -14,7 +13,8 @@ export const startWalletUpdate = (stripeId)=>{
             // const response = await Promise.all([paymentUpdate , walletUpdate])
             // console.log('response after promise' , response.data)
             dispatch(setWallet(response.data))
-            Navigate('/live')
+            navigate('/live')
+            swal('Amount Add Success!', `Rs ${paymentUpdate.data?.amount}` , 'success')
         }catch(err){
             console.log(err)
         }
@@ -39,6 +39,18 @@ export const startGetWallet = (id)=>{
 export const setWallet = (data)=>{
     return {
         type:'SET_WALLET',
+        payload:data
+    }
+}
+export const setUpdateWallet = (data)=>{
+    return {
+        type:'SET_UPDATE_WALLET',
+        payload:data
+    }
+}
+export const startCreditWalletBack = (data)=>{
+    return {
+        type:'SET_CREDIT_WALLET_BACK',
         payload:data
     }
 }

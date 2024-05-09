@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
-
+import { Row, Col, Card, Button } from 'react-bootstrap'
 export default function Home(){
     const navigate=useNavigate()
     const products = useSelector((state)=>{
@@ -11,30 +11,25 @@ export default function Home(){
         navigate('/loginpage')
     }
     return (
-            <div className="row">
-
-                {
-                    products.data.map((ele)=>{
-                        return <div key={ele._id} className="col-md-4">
-                            <div>
-                            <img
-                                    src={`http://localhost:3000/${ele.productImg}`} alt='img'
-                                    height='300px' width='260px'
-                                />
-                            
-                            <div className="card-body"><h3 className="card-title">{ele.productName}</h3>
-                            {/* <video controls height='300px' width='260px'>
-                                    <source
-                                    key={ele._id}
-                                    src={`http://localhost:3000/${ele.productVideo}`}
-                                    />
-                                </video> */}
-                            <p className="card-text">{ele.sellerId?.phone}</p></div>
-                            </div>
-                            <button className="btn btn-primary" onClick={handleClick}>Bid</button>
-                            </div>
-                    })
-                }
-            </div>
+        <Row className="mx-4 my-4">
+        {products.data.map((ele) => (
+            <Col key={ele._id} xs={2}>
+                <Card style={{ width: '14rem' }}>
+                    <Card.Img
+                        variant="top"
+                        src={`http://localhost:3000/${ele.productImg}`}
+                        alt="Product Image"
+                        height="200px"
+                        width="260px"
+                    />
+                    <Card.Body>
+                        <Card.Title>{ele.productName}</Card.Title>
+                        <Card.Text>Base Price - {ele.basePrice}Rs</Card.Text>
+                        <Button variant="primary" onClick={handleClick}>Bid</Button>
+                    </Card.Body>
+                </Card>
+            </Col>
+        ))}
+    </Row>
     )
 }

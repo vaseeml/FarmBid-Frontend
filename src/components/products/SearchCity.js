@@ -1,20 +1,29 @@
 import { useState,useEffect } from "react"
+import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import Select from 'react-select'
 import {Col } from "react-bootstrap"
 import {  faLocationArrow } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { startFilterLiveProductsOnCities , setSelectedCity, getStartLiveProducts } from "../../actions/product-actions"
 export default function SearchCity(){
     const [ selectCity , setSelectCity ] = useState([])
-    const [ city , setCity ] = useState('')
-    const handleChange=(selectedCity)=>{
-        setCity(selectedCity?.value)
+    const city = useSelector((state)=>{
+        return state.products?.setCity
+    })
+    const dispatch = useDispatch()
+    const handleChange=(e)=>{
+        const selectedCity = e.value
+        console.log(selectedCity)
+        dispatch(setSelectedCity(selectedCity))
+        // dispatch(getStartLiveProducts({setCity:selectedCity}))
     }
     useEffect(()=>{
         (async()=>{
             try{
                 const response = await axios.get('http://localhost:3000/api/getcity')
-                setSelectCity(response.data.map(city => ({value:city , label:city})))
+                const sortedCities = response.data.sort((a , b)=> a.localeCompare(b))// react select will automatically does the sorting
+                setSelectCity(sortedCities.map(city => ({value:city , label:city})))
                 // setSelectCity(response.data)
             } catch(err){
                 console.log(err)
