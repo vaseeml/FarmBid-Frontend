@@ -67,44 +67,73 @@ export default function Chart() {
                     })
                     return currentMonthBids
                 }
-                const generateLabels = (time)=>{
-                    const labels = []
-                    const currentDate = new Date()
-                    const currentMonth = currentDate.toLocaleDateString('en-In' , { month:'long' })
+                // const generateLabels = (time)=>{
+                //     const labels = []
+                //     const currentDate = new Date()
+                //     const currentMonth = currentDate.toLocaleDateString('en-In' , { month:'long' })
                     
-                    for(let i = 6 ; i>=0; i--){
-                        const date = new Date(currentDate)
-                        date.setDate(date.getDate() - i )
-                        labels.push(`${date.getDate()} ${currentMonth}}`)
-                    }
-                    return labels
-                }
+                //     for(let i = 6 ; i>=0; i--){
+                //         const date = new Date(currentDate)
+                //         date.setDate(date.getDate() - i )
+                //         labels.push(`${date.getDate()} ${currentMonth}}`)
+                //     }
+                //     return labels
+                // }
+                const generateChartData = (bidsData) => {
+                  // Group bids by day and calculate average bid amount for each day
+                  const groupedBids = bidsData.reduce((acc, bid) => {
+                      const bidDate = new Date(bid.createdAt).toLocaleDateString('en-US');
+                      acc[bidDate] = acc[bidDate] || [];
+                      acc[bidDate].push(bid.amount);
+                      console.log(acc)
+                      return acc;
+                  }, {});
+              
+                  const labels = Object.keys(groupedBids);
+                  const avgBidAmounts = labels.map((date) => {
+                      const bids = groupedBids[date];
+                      const total = bids.reduce((sum, bid) => sum + bid, 0);
+                      return total / bids.length;
+                  });
+              
+                  return {
+                      labels,
+                      datasets: [
+                          {
+                              label: 'Average Bids Placed',
+                              data: avgBidAmounts,
+                              backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                          },
+                      ],
+                  };
+              };
                 console.log('response.data' , response.data)
                 const currentMonthBids = filterCurrentMonthBids(response.data)
                 console.log('currentMonthbids' , currentMonthBids)
                 const time = currentMonthBids?.map(bid => bid.createdAt)
-                const bidAmounts = currentMonthBids?.map(bid => bid.amount)
-                const labels = generateLabels(time)
+                // const bidAmounts = currentMonthBids?.map(bid => bid.amount)
+                const labels = generateChartData(currentMonthBids)
    
-                const data = {
-                    labels,
-                    datasets: [
-                        {
-                        label: 'Bids Placed',
-                        data: bidAmounts, // Example data (replace with your actual data)
-                        backgroundColor: 'rgba(255, 99, 132, 0.5)',
-                    }
-                    ]
-                }
-                console.log(data)
-                setBidsOnProducts(data)
+                // const data = {
+                //     labels,
+                //     datasets: [
+                //         {
+                //         label: 'Bids Placed',
+                //         data: bidAmounts, // Example data (replace with your actual data)
+                //         backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                //     }
+                //     ]
+                // }
+                // console.log(data)
+                setBidsOnProducts(labels)
             } catch(err){
                 console.log(err)
             }
         })();
     },[selectedProduct])
-    const totalBuyers = customersData?.map(seller => seller.role === 'buyer').length
-    const totalSellers = customersData?.map(seller => seller.role === 'seller').length
+    const totalBuyers = customersData?.filter(buyer => buyer.role == 'buyer').length
+    const totalSellers = customersData?.filter(seller => seller.role === 'seller').length
+
     const userData = {
         labels:['sellers' , 'buyers'],
         datasets:[

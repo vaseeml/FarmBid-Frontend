@@ -1,6 +1,13 @@
 import axios from 'axios'
 import { productCreatedNotify } from '../components/Notify'
 
+export const setSelectedCity = (city)=>{
+    return {
+        type:'SET_SELECTED_CITY',
+        payload:city
+    }
+}
+
 export const getStartProduct = () => {
     return async (dispatch) => {
         try {
@@ -13,15 +20,22 @@ export const getStartProduct = () => {
     }
 }
 
-export const startGetUpComingProducts = ({role , searchQuery})=>{
+export const startGetUpComingProducts = ({role , searchQuery , setCity, page , limit })=>{
     // console.log('role' , role , 'search' , searchQuery)
     return async(dispatch)=>{
         try{
             // getting upcoming products based on role
-            const response = await axios.get(`http://localhost:3000/api/products/upcoming?role=${role}&&search=${searchQuery?searchQuery :''}` , {headers:{
+            const response = await axios.get(`http://localhost:3000/api/products/upcoming?role=${role}&&search=${searchQuery?searchQuery :''}&&page=${page?page:1}&&limit=${limit?limit:8}` , {headers:{
                 'Authorization':localStorage.getItem('token')
             }})
             // console.log(response.data)
+            // const filteredCity = response.data.filter((ele)=>{
+            //     if(setCity){
+            //         return ele.cities == setCity
+            //     }else{
+            //         return ele
+            //     }
+            // })
             dispatch(setUpComingProducts(response.data))
         } catch (err) {
             console.log(err)
@@ -36,7 +50,6 @@ export const startCreateProducts = (data,navigate) => {
             })
             productCreatedNotify()
             // navigate('/upcoming')
-
             const currentTime = new Date()
             if (new Date(response.data?.biddingStart) <= currentTime) {
                 dispatch(setLiveCreatedProduct(response.data))
@@ -76,15 +89,23 @@ export const setProducts = (data) => {
         payload: data
     }
 }
-export const getStartLiveProducts=({role , searchQuery})=>{
-    // console.log('role in live' , role)
+export const getStartLiveProducts=({role , searchQuery , setCity , page , limit})=>{
+    console.log('city' , searchQuery)
+    console.log('page' , page , limit)
     return async(dispatch)=>{
         try{
             // getting live products based on role
-            const response = await axios.get(`http://localhost:3000/api/products/live?role=${role}&&search=${searchQuery?searchQuery :''}`,{
+            const response = await axios.get(`http://localhost:3000/api/products/live?role=${role}&&search=${searchQuery?searchQuery :''}&&page=${page?page:1}&&limit=${limit?limit:8}`,{
                 headers:{'Authorization':localStorage.getItem('token')}
             })
             console.log('populate' , response.data)
+            // const filteredCity = response.data.filter((ele)=>{
+            //     if(setCity){
+            //         return ele.cities == setCity
+            //     }else{
+            //         return ele
+            //     }
+            // })
             dispatch(setLiveProducts(response.data))
         } catch (err) {
             console.log(err)
@@ -98,11 +119,11 @@ export const setLiveProducts = (data) => {
         payload: data
     }
 }
-export const getStartCompletedProducts=({role , searchQuery})=>{
+export const getStartCompletedProducts=({role , searchQuery, page , limit })=>{
     return async(dispatch)=>{
         try{
             // getting completed products based on role
-            const response = await axios.get(`http://localhost:3000/api/products/completed?role=${role}&&search=${searchQuery?searchQuery:''}`,{
+            const response = await axios.get(`http://localhost:3000/api/products/completed?role=${role}&&search=${searchQuery?searchQuery:''}&&page=${page?page:1}&&limit=${limit?limit:8}`,{
                 headers:{'Authorization':localStorage.getItem('token')}
             })
             dispatch(setCompletedProducts(response.data))
@@ -194,5 +215,43 @@ export const removeProductFromLive = (product)=>{
     return {
         type:'REMOVE_PRODUCT_FROM_LIVE',
         payload:product
+    }
+}
+
+// export const startFilterLiveProductsOnCities = (searchCity)=>{
+//     return {
+//         type:'SET_FILTERED_LIVE_PRODUCTS',
+//         payload:searchCity
+//     }
+// }
+
+export const searchQueryProducts=({role , searchQuery , setCity , page , limit})=>{
+    console.log('city' , searchQuery)
+    console.log('page' , page , limit)
+    return async(dispatch)=>{
+        try{
+            // getting live products based on role
+            const response = await axios.get(`http://localhost:3000/api/products/live?role=${role}&&search=${searchQuery?searchQuery :''}&&page=${page?page:1}&&limit=${limit?limit:8}`,{
+                headers:{'Authorization':localStorage.getItem('token')}
+            })
+            console.log('search results' , response.data)
+            // const filteredCity = response.data.filter((ele)=>{
+            //     if(setCity){
+            //         return ele.cities == setCity
+            //     }else{
+            //         return ele
+            //     }
+            // })
+            dispatch(setSearchedProducts(response.data))
+        } catch (err) {
+            console.log(err)
+        }
+    }
+}
+
+const setSearchedProducts = (data)=>{
+    return {
+        type:'SET_SEARCH_PRODUCT',
+        payload:data
     }
 }

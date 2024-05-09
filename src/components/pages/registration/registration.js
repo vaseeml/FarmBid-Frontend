@@ -14,7 +14,38 @@ export default function RegistrationForm(){
             return<li key={i}>{ele.msg}</li>
         })
     }
-
+    const handleEmailBlur = async(formikProps)=>{
+        const email = formikProps.values.email
+        try{
+            const response = await axios.post('http://localhost:3000/api/check-email' , {email:email})
+            const data = response.data
+            console.log(data)
+            if(data.exists){
+                setServerErrors([{ path: 'email', msg: 'This email is already in use. Please try another one.' }])
+            } else {
+                setServerErrors([])
+            }
+        } catch(err){
+            console.log(err)
+            alert(err)
+        }
+    }
+    const handlePhoneBlur = async(formikProps)=>{
+        const phone = formikProps.values.phone
+        try{
+            const response = await axios.post('http://localhost:3000/api/check-phone' , {phone:phone})
+            const data = response.data
+            console.log(data)
+            if(data.exists){
+                setServerErrors([{ path: 'phone', msg: 'This phone is already in use. Please try another one.' }])
+            } else {
+                setServerErrors([])
+            }
+        } catch(err){
+            console.log(err)
+            alert(err)
+        }
+    }
     return(
         <div className="d-flex justify-content-center align-items-center vh-100">
         <div className="card p-4">
@@ -58,13 +89,13 @@ export default function RegistrationForm(){
                 {formikProps.values.username.length===0&& <p style={{color:'red'}}>{helperFunction('username')}</p>}
 
                 <label className="form-label" htmlFor="email">Email</label>
-                <Field className="form-control" name="email" type="text" id="email"/>
+                <Field className="form-control" name="email" type="text" id="email" onBlur={() => handleEmailBlur(formikProps)}/>
                 <ErrorMessage className="text-danger" component="div" name="email"/>
                 {/* {formikProps.values.email.length==0&& <p style={{color:'red'}}>{helperFunction('email')}</p>} */}
                 {serverErrors.length>0 && <p style={{color:'red'}}>{helperFunction('email')}</p>}
 
                 <label className="form-label" htmlFor="phone">Phone</label>
-                <Field className="form-control" name="phone" type="text" id="phone"/>
+                <Field className="form-control" name="phone" type="text" id="phone" onBlur={() => handlePhoneBlur(formikProps)}/>
                 <ErrorMessage className="text-danger" component="div" name="phone"/>
                 {/* {formikProps.values.phone.length==0&& <p style={{color:'red'}}>{helperFunction('phone')}</p>} */}
                 {serverErrors.length>0 && <p style={{color:'red'}}>{helperFunction('phone')}</p>}

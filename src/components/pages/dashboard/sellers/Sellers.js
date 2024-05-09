@@ -62,7 +62,7 @@ export default function Sellers() {
                     </Form>
                 </Col>
                 <Col style={{marginLeft:'900px'}}>
-                    <button className='btn btn-danger' onClick={handleBlock}>Viewe Blocked Sellers</button>
+                    <button className='btn btn-danger' onClick={handleBlock}>View Blocked Sellers</button>
                 </Col>
             </Row>
             <h2>Total Sellers</h2>

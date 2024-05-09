@@ -6,6 +6,9 @@ import LiveBids from "./LiveBids";
 import Bid from "./Bid";
 import CountDownTimer from '../../products/CountDownTimer';
 import { useSelector } from 'react-redux'
+import { useAuth } from "../../../contexts/AuthContext"
+import swal from 'sweetalert'
+import { newBidPlacedNotify } from "../../Notify";
 
 const socket = io('http://localhost:3000')
 export default function BidContainer(){
@@ -14,6 +17,7 @@ export default function BidContainer(){
     const product = useSelector((state)=>{
         return state.products.liveProducts.find(ele=>ele._id == id)
     })
+    const { user } = useAuth() 
     useEffect(()=>{
         (async()=>{
             try{
@@ -39,6 +43,13 @@ export default function BidContainer(){
         console.log('Received bid update' , bidData)
         // setPreviousBids([...previousBids , bidData])
         setPreviousBids(prevBid =>[...prevBid , bidData])
+        if(bidData){
+            if(user?.role == 'seller'){
+                swal('New Bid!', `amount ${bidData?.amount}` , 'success')
+            } else{
+                newBidPlacedNotify()
+            }
+        }
         })
 
         return ()=>{
@@ -51,7 +62,7 @@ export default function BidContainer(){
     }
     console.log('state ',previousBids)
     return (
-        <div className="row">
+        <div className="row mt-5">
             <div className="col-md-4">
                 <Bid product={product}/>
             </div>

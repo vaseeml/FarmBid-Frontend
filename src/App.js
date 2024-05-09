@@ -1,5 +1,6 @@
 
 import { ToastContainer } from 'react-toastify'
+import swal from 'sweetalert'
 import 'react-toastify/dist/ReactToastify.css'
 import { Route, Routes, useLocation } from 'react-router-dom'
 import { useEffect, useState } from 'react'
@@ -21,7 +22,7 @@ import CreateProduct from './components/products/CreateProduct'
 import MyProduct from './components/pages/bid/MyProduct'
 import Cart from './components/pages/cart/Cart'
 import PaymentSuccess from './components/payments/PaymentSuccess'
-import { startGetWallet, startGetProfile } from './actions/user-actions'
+import { startGetWallet, startGetProfile , startCreditWalletBack} from './actions/user-actions'
 import Customers from './components/pages/dashboard/customer/Customers'
 import { startGetAllProfiles } from './actions/admin-actions'
 import ViewCustomer from './components/pages/dashboard/customer/ViewCustomer'
@@ -40,7 +41,9 @@ import Chart from './components/pages/dashboard/Chart'
 import WalletTransactions from './components/pages/Profile/WalletTransaction'
 import PaymentCancel from './components/payments/PaymentCancel'
 import Footer from './components/pages/home/Footer'
-
+import ViewReport from './components/pages/dashboard/ViewReports'
+import Report from './components/pages/dashboard/Report'
+import io from 'socket.io-client'
 function App() {
   const location = useLocation()
   const [loggedIn, setLoggedIn] = useState(false)
@@ -64,13 +67,12 @@ function App() {
     })();
   }, [userDispatch])
   useEffect(() => {
+    const socket = io('http://localhost:3000')
     // checking the token 
     const token = localStorage.getItem('token')
-
     if (token) {
       const auth = jwtDecode(token)
       // conditionally dispatching the functions to get data based on role
-      console.log('user.role', user)
       if (auth?.role !== 'admin') {
         const role = auth?.role
         console.log('role11', auth?.role)
@@ -85,10 +87,27 @@ function App() {
       if (auth?.role === 'admin') {
         dispatch(startGetAllProfiles())
       }
-    } else {
-      // dispatch after page is mounted
-      dispatch(getStartProduct())
-    }
+      // join room of users
+      socket.on('connect' , ()=>{
+        socket.emit('joinUsersRoom' ,auth?.id )
+      })
+      } else {
+        // dispatch after page is mounted
+        dispatch(getStartProduct())
+      }
+    
+    socket.on('updateWallet' , (updateWallet)=>{
+      console.log('received information for wallet update' , updateWallet)
+      dispatch(startCreditWalletBack(updateWallet))
+      swal('Amount Credited Back!', `amount ${updateWallet.amount}` , 'success')
+    })
+    socket.on('bidWon' ,(bidWonData)=>{
+      console.log('bid won success update' , bidWonData)
+      swal('Congrats!!!' , `You Won Bid For ${bidWonData.productId} With Bid Of ${bidWonData.bidAmount}Rs`)
+    } )
+    return () => {
+      socket.disconnect();
+    };
   }, [loggedIn])
   const setUserLogin = () => {
     setLoggedIn(!loggedIn)
@@ -100,9 +119,9 @@ function App() {
   return (
     <div className="App" >
       <Header currentPath={currentPath} />
-
       <Routes>
-        <Route path="/" element={localStorage.getItem('token') ? <LiveProducts /> : <Home />} />
+        <Route path="/" element={<Home />} />
+        {/* <Route path="/" element={localStorage.getItem('token') ? <LiveProducts /> : <Home />} /> */}
         <Route path="/loginPage" element={<LoginForm setUserLogin={setUserLogin} />} />
         <Route path="/register" element={<RegistrationForm />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -160,7 +179,7 @@ function App() {
         />
         <Route path='/live/:id/myProduct' element={
           <PrivateRoute permittedRoles={['seller']}>
-            <MyProduct />
+            <BidContainer />
           </PrivateRoute>}
         />
         <Route path='/live/:id/bid' element={
@@ -185,11 +204,13 @@ function App() {
             <WalletTransactions />
           </PrivateRoute>}
         />
+        <Route path='/view/reports' element={<ViewReport/>} />
+        <Route path='/report' element={<Report/>} />
         <Route path='/payment-success' element={<PaymentSuccess />} />
         <Route path='/payment-cancel' element={<PaymentCancel />} />
       </Routes>
       <ToastContainer />
-      <Footer/>
+      {/* <Footer/> */}
     </div>
   )
 }

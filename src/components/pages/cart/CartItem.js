@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { Card } from 'reactstrap'
+import { FaBell } from 'react-icons/fa';
 export default function CartItem({ item , removeProduct}){
     const navigate = useNavigate()
     const handleClick = async(id)=>{
@@ -37,7 +38,8 @@ export default function CartItem({ item , removeProduct}){
             <p className="card-text">Stock: {item.product?.stock}</p>
             <p className="card-text">Base Price: {item.product?.basePrice}</p>
             <button className="btn btn-danger" onClick={() => handleClick(item._id)}>Remove Cart</button>
-            <button className="btn btn-success" onClick={() => handleBid(item.product?._id)}>Bid</button>
+            {/* <FaBell size={30} /> */}
+            <button className="btn btn-success" onClick={() => handleBid(item.product?._id)} disabled={item.product?.biddingStart > item.product?.biddingEnd}>Bid</button>
           </div>
         </div>
       </div>

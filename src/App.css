@@ -87,4 +87,21 @@
   padding: 10px;
   margin-bottom: 10px;
 }
+.bidder-popup {
+  position: absolute;
+  background-color: white;
+  padding: 10px;
+  border: 1px solid #ccc;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.2);
+  z-index: 9999;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  display: none; /* Initially hide the popup */
+}
+
+.list-group-item:hover .bidder-popup {
+  display: block; /* Show the popup when hovering over the list item */
+}
+
 

@@ -32,11 +32,11 @@ export default function ViewCustomerBids(){
             }
         })()
     },[])
-    const handleView = (bidderId)=>{
-        const bidder = bidders.find(ele=>ele.userId._id == bidderId)
-        setBidder(bidder)
-        toggle()
-    }
+    // const handleView = (bidderId)=>{
+    //     const bidder = bidders.find(ele=>ele.userId._id == bidderId)
+    //     setBidder(bidder)
+    //     toggle()
+    // }
     const columns=[
         {
             name:'Product Name',
@@ -62,10 +62,10 @@ export default function ViewCustomerBids(){
             name:'Product Image',
             cell: (row) => <img src={`http://localhost:3000/${row.productId?.productImg}`} alt="User" style={{ width: '100px', height: '90px' }} />
         },
-        {
-            name:'Actions',
-            cell: (row) => <button className='btn btn-primary' onClick={()=>handleView(row.bidderId)}>View Bidder</button>
-        }
+        // {
+        //     name:'Actions',
+        //     cell: (row) => <button className='btn btn-primary' onClick={()=>handleView(row.bidderId)}>View Bidder</button>
+        // }
         
     ]
     return (

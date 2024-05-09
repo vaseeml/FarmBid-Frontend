@@ -1,9 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios'
+import { BsBookmarkFill, BsBookmark } from 'react-icons/bs';
 import { useEffect, useState } from 'react';
 import Select from 'react-select'
 import {  Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { startEditProduct , setDeleteProduct , removeProductFromUpcoming , addProductToLive } from '../../actions/product-actions';
+import { startEditProduct , setDeleteProduct , removeProductFromUpcoming , addProductToLive, startGetUpComingProducts } from '../../actions/product-actions';
 import CountDownTimer from './CountDownTimer';
 import { useAuth } from '../../contexts/AuthContext';
 import { Container, Card, Button, OverlayTrigger, Tooltip, Row, Col,Carousel } from 'react-bootstrap';
@@ -33,6 +34,9 @@ export default function UpcomingProducts() {
     const serverError=useSelector((state)=>{
         return state.products.serverErrors
     })
+    const city = useSelector((state)=>{
+        return state.products.setCity
+    })
     const [modal, setModal] = useState(false);
     const [editId, setEditId] = useState('')
     const [ selectCity , setSelectCity ] = useState([])
@@ -47,7 +51,16 @@ export default function UpcomingProducts() {
         productVideo: '',
         biddingStart: ''
     });
-    
+    const [ page , setPage ] = useState(1) // initial page number 
+    const [ isLoading , setIsLoading ] = useState(false)
+    const limit = 8 // products per page
+    const filteredProducts = upcomingProducts.filter((ele)=>{
+        if(city){
+            return ele.cities == city
+        }else{
+            return ele
+        }
+    })
     const toggle = () => {
         setModal(!modal);
     };
@@ -113,7 +126,7 @@ export default function UpcomingProducts() {
         setForm({...form,cities:option.value})
         };
     const handleDelete = async (id) => {
-        const confirm = window.confirm('Are You Sure Boss!')
+        const confirm = window.confirm(`Are You Sure ${user?.username}?`)
         if (confirm) {
 
             dispatch(setDeleteProduct(id))
@@ -155,8 +168,6 @@ export default function UpcomingProducts() {
         setErrors(validationErrors)
     }
     }
-    console.log('errors',errors)
-    console.log('form',form)
     const handleClick = async(id)=>{
         // checking the role before making api requests
         if(user?.role === 'buyer'){
@@ -171,7 +182,7 @@ export default function UpcomingProducts() {
                         'Authorization':localStorage.getItem('token')
                     }
                 })
-                console.log('added to cart' , response.data)
+                // console.log('added to cart' , response.data)
                 navigate('/cart')
             }catch(err){
                 console.log(err)
@@ -212,13 +223,31 @@ export default function UpcomingProducts() {
             }
         })();
     },[])
+    useEffect(()=>{
+        window.addEventListener('scroll' , handleScroll)
+        return ()=>{
+            window.removeEventListener('scroll' , handleScroll)
+        }
+    } , [])
+    useEffect(()=>{
+        // setIsLoading(true)
+        console.log('useEffect is called for page request')
+        dispatch(startGetUpComingProducts({role:user?.role , page:page , limit:limit}))
+    }, [page])
+    const handleScroll = ()=>{
+        const { scrollTop , scrollHeight , clientHeight } = document.documentElement
+        if(scrollTop + clientHeight >= scrollHeight - 5){
+            setPage(prev=>prev+1) // incrementing the page number
+        }
+    }
+    console.log('upcoming products ' , upcomingProducts)
     return (
         
         <div>
            <SearchCity />
             <Container>
-                <Row xs={1} md={3}>
-                {upcomingProducts.map((ele) => (
+                <Row xs={1} md={4}>
+                {filteredProducts.map((ele) => (
                     <Col key={ele._id} >
                        <Card className="bg-light mt-4 ml-4">
                         <Carousel interval={3000} controls={false} indicators={false}>
@@ -228,7 +257,7 @@ export default function UpcomingProducts() {
                                 <img
                                 src={`http://localhost:3000/${ele}`}
                                 alt="Product Image"
-                                height="300px"
+                                height="250px"
                                 width="260px"
                                 className="d-block w-100"
                                 />
@@ -237,7 +266,7 @@ export default function UpcomingProducts() {
                             
                         
                         <Carousel.Item>
-                            <video autoPlay muted loop className="d-block w-100" style={{ height: '300px' }}>
+                            <video autoPlay muted loop className="d-block w-100" style={{ height: '250px' }}>
                             <source src={`http://localhost:3000/${ele.productVideo}`} type="video/mp4" />
                             </video>
                         </Carousel.Item>
@@ -266,7 +295,8 @@ export default function UpcomingProducts() {
                                         <CountDownTimer biddingStart={new Date(ele.biddingStart)} onBiddingStart={()=>onBiddingStart(ele._id)}/>
                                     </div>
                                     <div className="d-flex justify-content-between align-items-center mt-2">
-                                    {user?.role == 'buyer' && <Button variant="success" size="sm" className="me-2" onClick={()=>handleClick(ele._id)}>Add to Cart</Button> }
+                                    {user?.role == 'buyer' && <Button variant="success" size="sm" className="me-2" onClick={()=>handleClick(ele._id)}>Add To WishList</Button> }
+                                    {/* {user?.role == 'buyer' && <BsBookmarkFill style={{ color: 'black', fontSize: '1.5rem' }} onClick={()=>handleClick(ele._id)}/>} */}
                                     {user?.role == 'seller' && <Button variant="warning" size="sm" className="me-2" onClick={() => {handleEdit(ele._id)}} >Edit</Button> }
                                     {user?.role == 'seller' && <Button variant="danger" size="sm" onClick={() => { handleDelete(ele._id) }}>Delete</Button> }
                                     </div>
