@@ -54,7 +54,7 @@ function App() {
     (async () => {
       if (localStorage.getItem('token')) {
         try {
-          const response = await axios.get('http://localhost:3000/api/user/account', {
+          const response = await axios.get('http://localhost:4000/api/user/account', {
             headers: {
               'Authorization': localStorage.getItem('token')
             }
@@ -67,7 +67,7 @@ function App() {
     })();
   }, [userDispatch])
   useEffect(() => {
-    const socket = io('http://localhost:3000')
+    const socket = io('http://localhost:4000')
     // checking the token 
     const token = localStorage.getItem('token')
     if (token) {
@@ -75,12 +75,11 @@ function App() {
       // conditionally dispatching the functions to get data based on role
       if (auth?.role !== 'admin') {
         const role = auth?.role
-        console.log('role11', auth?.role)
+        console.log('role', auth?.role)
         dispatch(getStartLiveProducts({ role: role }))
         dispatch(getStartCompletedProducts({ role: role }))
         dispatch(startGetUpComingProducts({ role: role }))
         dispatch(startGetProfile())
-        // passing id is optional
         dispatch(startGetWallet(auth?.id))
         dispatch(startGetProfile())
       }
@@ -120,8 +119,8 @@ function App() {
     <div className="App" >
       <Header currentPath={currentPath} />
       <Routes>
-        <Route path="/" element={<Home />} />
-        {/* <Route path="/" element={localStorage.getItem('token') ? <LiveProducts /> : <Home />} /> */}
+        {/* <Route path="/" element={<Home />} /> */}
+        <Route path="/" element={localStorage.getItem('token') ? <LiveProducts /> : <Home />} />
         <Route path="/loginPage" element={<LoginForm setUserLogin={setUserLogin} />} />
         <Route path="/register" element={<RegistrationForm />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />

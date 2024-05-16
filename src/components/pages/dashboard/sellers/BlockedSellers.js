@@ -11,11 +11,10 @@ export default function BlockedSellers() {
     useEffect(() => {
         try {
             (async () => {
-                const response = await axios.get(`http://localhost:3000/api/seller/blocked`, {
+                const response = await axios.get(`http://localhost:4000/api/seller/blocked`, {
                     headers: { 'Authorization': localStorage.getItem('token') }
                 })
                 setData(response.data)
-                console.log(response.data)
             })()
         } catch (err) {
             console.log(err)
@@ -23,7 +22,7 @@ export default function BlockedSellers() {
     }, [])
     const handleClick = async (id) => {
         try {
-            const response = await axios.put(`http://localhost:3000/api/unblock/${id}`, { isBlock: 'false' }, {
+            const response = await axios.put(`http://localhost:4000/api/unblock/${id}`, { isBlock: 'false' }, {
                 headers: { 'Authorization': localStorage.getItem('token') }
             })
             const updatedProfiles = data.filter((ele) => ele._id !== response.data._id)

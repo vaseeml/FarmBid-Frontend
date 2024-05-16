@@ -3,22 +3,22 @@ import { Modal, Button, Form } from "react-bootstrap";
 import axios from "axios";
 
 const Buyer = () => {
-  const [show, setShow] = useState(false);
-  const [number, setNumber] = useState("");
-  const [data, setData] = useState([]);
+  const [show, setShow] = useState(false)
+  const [number, setNumber] = useState("")
+  const [data, setData] = useState([])
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleClose = () => setShow(false)
+  const handleShow = () => setShow(true)
 
   useEffect(() => {
-    fetchData();
+    fetchData()
   }, []);
 
   const fetchData = async () => {
-    const response = await axios.get("http://localhost:3000/api/wallet", {
+    const response = await axios.get("http://localhost:4000/api/wallet", {
       headers: { Authorization: localStorage.getItem("token") },
     });
-    setData(response.data);
+    setData(response.data)
   }
 
   const handleSubmit = async (e) => {
@@ -29,7 +29,7 @@ const Buyer = () => {
       };
       e.preventDefault();
       const response = await axios.post(
-        "http://localhost:3000/api/create-checkout-session",
+        "http://localhost:4000/api/create-checkout-session",
         formData
       );
       console.log("submitted", response.data);

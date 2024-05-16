@@ -7,28 +7,28 @@ import axios from 'axios';
 import { useState , useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faShoppingCart, faSearch, faUserCircle, faWallet, faBars } from '@fortawesome/free-solid-svg-icons';
-import ConditionalLink from '../../Private-Routes/Rolebased';
+// import ConditionalLink from '../../Private-Routes/Rolebased';
 import { useDispatch, useSelector } from 'react-redux';
 import {  Modal, ModalHeader, ModalBody, ModalFooter} from 'reactstrap'
 import { useContext } from 'react'
 import { AuthContext } from '../../contexts/AuthContext'
-import { getStartCompletedProducts, getStartLiveProducts, searchQueryProducts, startGetUpComingProducts } from '../../actions/product-actions';
+import { searchQueryProducts, } from '../../actions/product-actions';
 import OffCanvas from './OffCanvas';
 
 export default function Header({currentPath}) {
   const [modal, setModal] = useState(false);
   const [ updateAmount , setUpdateAmount ] = useState('')
   const [ searchQuery , setSearchQuery ] = useState('')
-  const [selectedOption, setSelectedOption] = useState("select");
+  const [selectedOption, setSelectedOption] = useState('select')
 
   const dispatch = useDispatch()
   const wallet = useSelector((state) => {
     return state.user?.wallet
   })
-  const setCity = useSelector((state)=>{
-    return state.products.setCity
-  })
-  const { user  } = useContext(AuthContext)
+  // const setCity = useSelector((state)=>{
+  //   return state.products.setCity
+  // })
+  const { user , userDispatch } = useContext(AuthContext)
   const navigate = useNavigate()
 
   // handles
@@ -44,15 +44,16 @@ export default function Header({currentPath}) {
   useEffect(()=>{
     (()=>{
       if(searchQuery.length >=3 || searchQuery.length === 0){
-        if(currentPath == '/live'){
-          dispatch(searchQueryProducts({role:user?.role, searchQuery:searchQuery , setCity:setCity}))
-        }
-        else if(currentPath == '/upcoming'){
-          dispatch(startGetUpComingProducts({role:user?.role , searchQuery:searchQuery , setCity:setCity}))
-        }
-        else if(currentPath == '/completed'){
-          dispatch(getStartCompletedProducts({role:user?.role , searchQuery:searchQuery}))
-        }
+        dispatch(searchQueryProducts({role:user?.role, searchQuery:searchQuery , path:currentPath}))
+        // if(currentPath == '/live'){
+        //   dispatch(searchQueryProducts({role:user?.role, searchQuery:searchQuery , path:currentPath}))
+        // }
+        // else if(currentPath == '/upcoming'){
+        //   dispatch(searchQueryProducts({role:user?.role , searchQuery:searchQuery , path:currentPath}))
+        // }
+        // else if(currentPath == '/completed'){
+        //   dispatch(searchQueryProducts({role:user?.role ,searchQuery:searchQuery, path:currentPath}))
+        // }
       }
     }
     )();
@@ -69,7 +70,7 @@ export default function Header({currentPath}) {
     if(localStorage.getItem('token')){
       try{
         // post request for making payment
-        const response = await axios.post('http://localhost:3000/api/create-checkout-session' ,formData, { headers:{
+        const response = await axios.post('http://localhost:4000/api/create-checkout-session' ,formData, { headers:{
             'Authorization':localStorage.getItem('token')
         }})
         // setting the localStorage stripe id with response
@@ -94,6 +95,7 @@ export default function Header({currentPath}) {
   const handleLogout = () => {
     // remove the token if user logged out
     localStorage.removeItem('token')
+    userDispatch({type:'REMOVE_USER_OBJ' , payload:null})
     navigate("/loginPage")
   };
   const handleCart = () => {
@@ -158,7 +160,7 @@ const handleSetAmount = (value)=>{
 
           {user?.role!=='admin' && 
            <Dropdown onSelect={handleSelect}>
-           <Dropdown.Toggle variant="success" id="dropdown-basic">
+           <Dropdown.Toggle style={{ backgroundColor: 'white' , color:'black'}} id="dropdown-basic">
                {selectedOption}
            </Dropdown.Toggle>
            <Dropdown.Menu>
@@ -195,6 +197,7 @@ const handleSetAmount = (value)=>{
               <Nav.Link as={Link} to="/loginPage">Login</Nav.Link>
             </div>
           )}
+          {user?.role == 'seller' && <Nav.Link onClick={handleClick} ><Button className='btn btn-success'>ADD PRODUCT</Button></Nav.Link>}
           {user?.role!=='admin' &&<Button variant="danger" type="button" className="d-flex align-items-center mx-3 " aria-controls="offcanvasRight" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" onClick={handleWallet}>
             <div className="rounded-circle  d-flex justify-content-center align-items-center" style={{ width: '20px', height: '20px', cursor: 'pointer' }}>
               <FontAwesomeIcon icon={faWallet} style={{ fontSize: "1.5em", color: "white" }} />
@@ -204,7 +207,7 @@ const handleSetAmount = (value)=>{
             </div>
           </Button>
           }
-          {user?.role == 'seller' && <Nav.Link onClick={handleClick} ><Button className='btn btn-success'>CREATE PRODUCT</Button></Nav.Link>}
+          
         </div>
       </Navbar.Collapse>
 

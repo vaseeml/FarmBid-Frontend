@@ -12,10 +12,9 @@ export default function ViewSeller() {
     })
     const handleBlock = async (id) => {
         try {
-            const response = await axios.put(`http://localhost:3000/api/block/${id}`, { isBlock: 'true' }, {
+            const response = await axios.put(`http://localhost:4000/api/block/${id}`, { isBlock: 'true' }, {
                 headers: { 'Authorization': localStorage.getItem('token') }
             })
-            console.log(response.data)
             navigate('/blocked/sellers')
         } catch (err) {
             console.log(err)

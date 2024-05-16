@@ -15,36 +15,36 @@ export const productReducer = (state = initialState, action) => {
             return { ...state , setCity:action.payload}
         }
         case 'SET_LIVE_PRODUCTS': {
-            // Filter out duplicate products based on their IDs
             const uniqueProducts = action.payload.filter(newProduct => (
                 state.liveProducts.every(existingProduct => existingProduct._id !== newProduct._id)
             ))
-            
-            // Spread the unique products into the liveProducts array
             return { ...state, liveProducts: [...state.liveProducts, ...uniqueProducts] }
-        }
-        case 'SET_SEARCH_PRODUCT':{
-            return {...state , liveProducts:action.payload}
-        }
-        case 'SET_LIVE_CREATED_PRODUCT':{
-            return {...state , liveProducts:[...state.liveProducts , action.payload]}
         }
         case 'SET_COMPLETED_PRODUCTS': {
             const uniqueProducts = action.payload.filter(newProduct => (
                 state.completedProducts.every(existingProduct => existingProduct._id !== newProduct._id)
             ))
-            
-            // Spread the unique products into the liveProducts array
             return { ...state, completedProducts: [...state.completedProducts, ...uniqueProducts] }
         }
         case 'SET_UPCOMING_PRODUCTS': {
             const uniqueProducts = action.payload.filter(newProduct => (
                 state.upcomingProducts.every(existingProduct => existingProduct._id !== newProduct._id)
             ))
-            
-            // Spread the unique products into the liveProducts array
             return { ...state, upcomingProducts: [...state.upcomingProducts, ...uniqueProducts] }
         }
+        case 'SET_SEARCH_LIVE_PRODUCT':{
+            return {...state , liveProducts:action.payload}
+        }
+        case 'SET_SEARCH__UPCOMING_PRODUCT':{
+            return {...state , upcomingProducts:action.payload}
+        }
+        case 'SET_SEARCH_COMPLETED_PRODUCT':{
+            return {...state , completedProducts:action.payload}
+        }
+        case 'SET_LIVE_CREATED_PRODUCT':{
+            return {...state , liveProducts:[...state.liveProducts , action.payload]}
+        }
+        
         case 'SET_UPCOMING_CREATED_PRODUCT':{
             return {...state , upcomingProducts:[...state.upcomingProducts , action.payload]}
         }
@@ -84,14 +84,14 @@ export const productReducer = (state = initialState, action) => {
                 ...state , completedProducts:[...state.completedProducts , action.payload]
             }
         }
-        case 'SET_FILTERED_LIVE_PRODUCTS':{
-            console.log('action ' , action.payload)
-            return {
-                ...state , liveProducts:state.liveProducts.filter((ele)=>{
-                    return ele.cities == action.payload
-                })
-            }
-        }
+        // case 'SET_FILTERED_LIVE_PRODUCTS':{
+        //     console.log('action ' , action.payload)
+        //     return {
+        //         ...state , liveProducts:state.liveProducts.filter((ele)=>{
+        //             return ele.cities == action.payload
+        //         })
+        //     }
+        // }
         case 'SERVER_ERRORS':{
             return{...state,serverErrors:action.payload}
         }

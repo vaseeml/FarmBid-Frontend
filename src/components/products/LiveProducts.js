@@ -11,7 +11,7 @@ export default function LiveProducts(){
     const navigate = useNavigate()
     const dispatch = useDispatch()
     const [ page , setPage ] = useState(1) // initial page number 
-    const [ isLoading , setIsLoading ] = useState(false)
+    // const [ isLoading , setIsLoading ] = useState(false)
     const limit = 8 // products per page
     const { user } = useAuth()
     const products=useSelector((state)=>{
@@ -20,7 +20,6 @@ export default function LiveProducts(){
     const city = useSelector((state)=>{
         return state.products.setCity
     })
-    console.log('come to live page' , products)
     const filteredProducts = products.filter((ele)=>{
         if(city){
             return ele.cities == city
@@ -43,7 +42,6 @@ export default function LiveProducts(){
         dispatch(removeProductFromLive(product))
 
     }
-    console.log('live page ' ,products)
     useEffect(()=>{
         window.addEventListener('scroll' , handleScroll)
         return ()=>{
@@ -52,7 +50,6 @@ export default function LiveProducts(){
     } , [])
     useEffect(()=>{
         // setIsLoading(true)
-        console.log('useEffect is called for page request')
         dispatch(getStartLiveProducts({role:user?.role , page:page , limit:limit}))
     }, [page])
     const handleScroll = ()=>{
@@ -75,7 +72,7 @@ export default function LiveProducts(){
                             {ele.productImg.map((ele)=>{
                             return <Carousel.Item>
                                 <img
-                                src={`http://localhost:3000/${ele}`}
+                                src={`http://localhost:4000/${ele}`}
                                 alt="Product Image"
                                 height="250px"
                                 // width="200px"
@@ -87,7 +84,7 @@ export default function LiveProducts(){
                         
                         <Carousel.Item>
                             <img
-                            src={`http://localhost:3000/${ele.productImg}`}
+                            src={`http://localhost:4000/${ele.productImg}`}
                             alt="Product"
                             height="250px"
                             // width="200px"
@@ -96,7 +93,7 @@ export default function LiveProducts(){
                         </Carousel.Item>
                         <Carousel.Item>
                             <video autoPlay muted loop className="d-block w-100" style={{ height: '250px' }}>
-                            <source src={`http://localhost:3000/${ele.productVideo}`} type="video/mp4" />
+                            <source src={`http://localhost:4000/${ele.productVideo}`} type="video/mp4" />
                             </video>
                         </Carousel.Item>
                         </Carousel>

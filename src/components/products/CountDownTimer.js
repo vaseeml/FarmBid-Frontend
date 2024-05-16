@@ -1,5 +1,4 @@
 import { useState , useEffect } from 'react'
-
 import { IoTime  } from 'react-icons/io5'
 export default function CountDownTimer(props){
     const calculateTimeRemaining = ()=>{
@@ -32,7 +31,6 @@ export default function CountDownTimer(props){
     }
     const [ timeRemaining , setTimeRemaining ] = useState(calculateTimeRemaining())
     useEffect(()=>{
-        console.log('useEffect called')
         const timer = setInterval(()=>{
             setTimeRemaining(calculateTimeRemaining())
         }, 1000)

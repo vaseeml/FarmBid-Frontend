@@ -17,7 +17,7 @@ export default function RegistrationForm(){
     const handleEmailBlur = async(formikProps)=>{
         const email = formikProps.values.email
         try{
-            const response = await axios.post('http://localhost:3000/api/check-email' , {email:email})
+            const response = await axios.post('http://localhost:4000/api/check-email' , {email:email})
             const data = response.data
             console.log(data)
             if(data.exists){
@@ -33,9 +33,8 @@ export default function RegistrationForm(){
     const handlePhoneBlur = async(formikProps)=>{
         const phone = formikProps.values.phone
         try{
-            const response = await axios.post('http://localhost:3000/api/check-phone' , {phone:phone})
+            const response = await axios.post('http://localhost:4000/api/check-phone' , {phone:phone})
             const data = response.data
-            console.log(data)
             if(data.exists){
                 setServerErrors([{ path: 'phone', msg: 'This phone is already in use. Please try another one.' }])
             } else {
@@ -72,7 +71,7 @@ export default function RegistrationForm(){
             
             onSubmit={async (values) => {
                 try {
-                    const response = await axios.post("http://localhost:3000/api/register", values)
+                    const response = await axios.post("http://localhost:4000/api/register", values)
                     registrationNotify()
                     navigate('/loginPage')
                 } catch (err) {

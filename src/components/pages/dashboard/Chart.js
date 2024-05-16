@@ -45,12 +45,12 @@ export default function Chart() {
         // console.log(selectedProduct)
         (async()=>{
             try{
-                const response = await axios.get(`http://localhost:3000/api/bids/on?search=${selectedProduct}` , {
+                const response = await axios.get(`http://localhost:4000/api/bids/on?search=${selectedProduct}` , {
                     headers:{
                         'Authorization':localStorage.getItem('token')
                     }
                 })
-                const usersData = await axios.get('http://localhost:3000/api/users/all' , {
+                const usersData = await axios.get('http://localhost:4000/api/users/all' , {
                     headers:{
                         'Authorization':localStorage.getItem('token')
                     }

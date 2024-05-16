@@ -15,7 +15,7 @@ export default function MyProduct(){
         <Col md={4}>
           <Card>
             <Card.Img
-             src={`http://localhost:3000/${product?.productImg}`} alt='img' height='300px' width='260px'
+             src={`http://localhost:4000/${product?.productImg}`} alt='img' height='300px' width='260px'
             />
             <Card.Body>
               <h3 className="card-title">{product?.productName}</h3>
@@ -37,7 +37,7 @@ export default function MyProduct(){
                     //     <CountDownTimer biddingEnd={new Date(product?.biddingEnd)}/>
                     // <div>
                     // <img
-                    //         src={`http://localhost:3000/${product?.productImg}`} alt='img'
+                    //         src={`http://localhost:4000/${product?.productImg}`} alt='img'
                     //         height='300px' width='260px'
                     //     />
                     

@@ -4,10 +4,10 @@ export const startWalletUpdate = (stripeId , navigate)=>{
     return async(dispatch)=>{
         try{
             // payment updating with transaction id
-            const paymentUpdate =await axios.put(`http://localhost:3000/api/success-update/${stripeId}` , {paymentStatus:'successful'})
+            const paymentUpdate =await axios.put(`http://localhost:4000/api/success-update/${stripeId}` , {paymentStatus:'successful'})
             console.log('payment ' , paymentUpdate) // the response of this is not similar to other
             // updating the wallet balance
-            const response =await axios.put('http://localhost:3000/api/wallet/credit' ,{balance:paymentUpdate.data?.amount}, { headers:{
+            const response =await axios.put('http://localhost:4000/api/wallet/credit' ,{balance:paymentUpdate.data?.amount}, { headers:{
                 'Authorization':localStorage.getItem('token')
             }})
             // const response = await Promise.all([paymentUpdate , walletUpdate])
@@ -25,7 +25,7 @@ export const startGetWallet = (id)=>{
     // no need of id bcz backend is taking care
     return async(dispatch)=>{
         try{
-            const response = await axios.get('http://localhost:3000/api/wallet' , {
+            const response = await axios.get('http://localhost:4000/api/wallet' , {
                 headers:{
                     'Authorization':localStorage.getItem('token')
                 }
@@ -63,7 +63,7 @@ export const setProfile = (data)=>{
 export const startGetProfile = ()=>{
     return async(dispatch)=>{
         try{
-            const response = await axios.get('http://localhost:3000/api/profile' , {
+            const response = await axios.get('http://localhost:4000/api/profile' , {
                 headers:{
                     'Authorization':localStorage.getItem('token')
                 }

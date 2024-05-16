@@ -133,7 +133,7 @@ export default function CreateProduct() {
     useEffect(()=>{
         (async()=>{
             try{
-                const response = await axios.get('http://localhost:3000/api/getcity')
+                const response = await axios.get('http://localhost:4000/api/getcity')
                 setSelectCity(response.data.map(city => ({value:city , label:city})))
             } catch(err){
                 console.log(err)
@@ -184,7 +184,7 @@ export default function CreateProduct() {
                     
                 </div>
                 <div className="form-group">
-                    <label htmlFor="basePrice">Base Price</label>
+                    <label htmlFor="basePrice">Base Price(Total weight/stock)</label>
                     <input
                         type="text" placeholder='ex:100'
                         className="form-control"

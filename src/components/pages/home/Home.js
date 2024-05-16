@@ -17,7 +17,7 @@ export default function Home(){
                 <Card style={{ width: '14rem' }}>
                     <Card.Img
                         variant="top"
-                        src={`http://localhost:3000/${ele.productImg}`}
+                        src={`http://localhost:4000/${ele.productImg}`}
                         alt="Product Image"
                         height="200px"
                         width="260px"

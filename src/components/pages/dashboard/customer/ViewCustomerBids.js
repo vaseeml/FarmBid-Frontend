@@ -3,16 +3,16 @@ import { useParams } from "react-router-dom";
 import { useState ,  useEffect } from 'react'
 import DataTable from "react-data-table-component";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { useSelector } from 'react-redux'
+// import { useSelector } from 'react-redux'
 export default function ViewCustomerBids(){
     const [ customerBids , setCustomerBids ] = useState([])
     const [ searchQuery , setSearchQuery ] = useState('')
     const [ bidder , setBidder ] = useState({})
     const [modal, setModal] = useState(false);
     const { id } = useParams()
-    const bidders = useSelector((state)=>{
-        return state.admin.profiles
-    })
+    // const bidders = useSelector((state)=>{
+    //     return state.admin.profiles
+    // })
     const toggle = () => {
         setModal(!modal)
     }
@@ -20,7 +20,7 @@ export default function ViewCustomerBids(){
     useEffect(()=>{
         (async()=>{
             try{
-                const response = await axios.get(`http://localhost:3000/api/buyer/${id}/bids` , {
+                const response = await axios.get(`http://localhost:4000/api/buyer/${id}/bids` , {
                     headers:{
                         'Authorization':localStorage.getItem('token')
                     }
@@ -60,7 +60,7 @@ export default function ViewCustomerBids(){
         },
         {
             name:'Product Image',
-            cell: (row) => <img src={`http://localhost:3000/${row.productId?.productImg}`} alt="User" style={{ width: '100px', height: '90px' }} />
+            cell: (row) => <img src={`http://localhost:4000/${row.productId?.productImg}`} alt="User" style={{ width: '100px', height: '90px' }} />
         },
         // {
         //     name:'Actions',

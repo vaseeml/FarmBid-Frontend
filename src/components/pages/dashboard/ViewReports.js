@@ -2,7 +2,6 @@
 import axios from "axios";
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { useEffect, useState } from 'react';
-import { Carousel } from 'react-bootstrap';
 import { useSelector } from 'react-redux'
 import DataTable from 'react-data-table-component'
 import { useNavigate } from 'react-router-dom'
@@ -50,7 +49,7 @@ export default function ViewReports() {
         },
         {
             name: 'image',
-            cell: (row) => <img src={`http://localhost:3000/${row.productImage[0]}`} alt="User" style={{ width: '100px', height: '90px' }} />
+            cell: (row) => <img src={`http://localhost:4000/${row.productImage[0]}`} alt="User" style={{ width: '100px', height: '90px' }} />
         },
         {
             name: 'Actions',
@@ -62,12 +61,11 @@ export default function ViewReports() {
     useEffect(() => {
         (async () => {
             try {
-                const response = await axios.get('http://localhost:3000/api/reports', {
+                const response = await axios.get('http://localhost:4000/api/reports', {
                     headers: {
                         'Authorization': localStorage.getItem('token')
                     }
-                });
-                console.log(response.data , 'hi')
+                })
                 setReports(response.data);
             } catch (err) {
                 console.log(err);

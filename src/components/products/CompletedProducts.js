@@ -41,7 +41,7 @@ export default function CompletedProducts(){
     const handleShowBuyerInfo = async(id) => {
       setShowModal(!showModal)
       try{
-        const response = await axios.get(`http://localhost:3000/api/order/${id}/product` , {
+        const response = await axios.get(`http://localhost:4000/api/order/${id}/product` , {
           headers:{
             "Authorization":localStorage.getItem('token')
           }
@@ -84,14 +84,14 @@ export default function CompletedProducts(){
                 <Carousel.Item>
                   <img
                     className="d-block w-100"
-                    src={`http://localhost:3000/${ele.productImg}`}
+                    src={`http://localhost:4000/${ele.productImg}`}
                     alt="Product Image"
                     style={{ height: '250px' }}
                   />
                 </Carousel.Item>
                 <Carousel.Item>
                   <video controls autoPlay muted  className="d-block w-100" style={{ height: '250px' }}>
-                    <source src={`http://localhost:3000/${ele.productVideo}`} type="video/mp4" />
+                    <source src={`http://localhost:4000/${ele.productVideo}`} type="video/mp4" />
                   </video>
                 </Carousel.Item>
               </Carousel>

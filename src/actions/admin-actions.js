@@ -2,7 +2,7 @@ import axios from 'axios'
 export const startGetAllProfiles = ()=>{
     return async(dispatch)=>{
         try{
-            const response = await axios.get('http://localhost:3000/api/profiles/all' , {
+            const response = await axios.get('http://localhost:4000/api/profiles/all' , {
                 headers:{
                     'Authorization':localStorage.getItem('token')
                 }

@@ -36,7 +36,7 @@ export default function Customers(){
         },
         {
             name:'image',
-            cell: (row) => <img src={`http://localhost:3000/${row.image}`} alt="User" style={{ width: '100px', height: '90px' }} />
+            cell: (row) => <img src={`http://localhost:4000/${row.image}`} alt="User" style={{ width: '100px', height: '90px' }} />
         },
         {
             name:'Actions',
