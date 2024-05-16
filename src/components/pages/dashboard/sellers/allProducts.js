@@ -20,7 +20,7 @@ export default function AllProducts() {
     const filteredSearch = data.filter((ele) => ele.productName.toLowerCase().includes(search.toLowerCase()))
     useEffect(() => {
         (async () => {
-            const response = await axios.get(`http://localhost:3000/api/seller/products/${profiles?.userId?._id}`, {
+            const response = await axios.get(`http://localhost:4000/api/seller/products/${profiles?.userId?._id}`, {
                 headers: { 'Authorization': localStorage.getItem('token') }
             })
             setData(response.data)
@@ -29,12 +29,11 @@ export default function AllProducts() {
     const handleViewBids = async(id)=>{
         toggle()
         try{
-            const response = await axios.get(`http://localhost:3000/api/product/${id}/bids` , {
+            const response = await axios.get(`http://localhost:4000/api/product/${id}/bids` , {
                 headers:{
                     'Authorization':localStorage.getItem('token')
                 }
             })
-            console.log(response.data)
             setProductBids(response.data)
         } catch(err){
             console.log(err)
@@ -58,7 +57,7 @@ export default function AllProducts() {
         },
         {
             name: 'productImg',
-            cell: (row) => <img src={`http://localhost:3000/${row.productImg}`} alt="User" style={{ width: '100px', height: '90px' }} />
+            cell: (row) => <img src={`http://localhost:4000/${row.productImg}`} alt="User" style={{ width: '100px', height: '90px' }} />
         },
         {
             name:'details',

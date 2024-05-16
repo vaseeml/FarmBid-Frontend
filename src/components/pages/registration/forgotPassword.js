@@ -18,9 +18,8 @@ export default function ForgotPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3000/api/send-otp", { phone });
+      const response = await axios.post("http://localhost:4000/api/send-otp", { phone });
     //   localStorage.setItem('phone',phone)
-      console.log(response.data);
       setMessage("OTP sent successfully!");
       setShowOtpForm(true);
       setPhoneError("")
@@ -33,8 +32,7 @@ export default function ForgotPassword() {
   const handleOtp = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3000/api/verify-otp", { phone, otp });
-      console.log(response.data);
+      const response = await axios.post("http://localhost:4000/api/verify-otp", { phone, otp });
       setMessage("OTP verified successfully!");
       setShowPasswordForm(true)
       swal('OTP Verified!' , `otp verified for phone no ${phone}` , 'success')
@@ -53,8 +51,7 @@ export default function ForgotPassword() {
             phone,
             password
         }
-        const response=await axios.post('http://localhost:3000/api/update/password',formData)
-        console.log(response.data)
+        const response=await axios.post('http://localhost:4000/api/update/password',formData)
         setMessage("Password updated successfully!");
         swal('Password Updated!', 'successufully' , 'success')
         setPasswordError("")

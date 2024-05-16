@@ -5,7 +5,7 @@ import Select from 'react-select'
 import {Col } from "react-bootstrap"
 import {  faLocationArrow } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
-import { startFilterLiveProductsOnCities , setSelectedCity, getStartLiveProducts } from "../../actions/product-actions"
+import { setSelectedCity } from "../../actions/product-actions"
 export default function SearchCity(){
     const [ selectCity , setSelectCity ] = useState([])
     const city = useSelector((state)=>{
@@ -14,14 +14,13 @@ export default function SearchCity(){
     const dispatch = useDispatch()
     const handleChange=(e)=>{
         const selectedCity = e.value
-        console.log(selectedCity)
         dispatch(setSelectedCity(selectedCity))
         // dispatch(getStartLiveProducts({setCity:selectedCity}))
     }
     useEffect(()=>{
         (async()=>{
             try{
-                const response = await axios.get('http://localhost:3000/api/getcity')
+                const response = await axios.get('http://localhost:4000/api/getcity')
                 const sortedCities = response.data.sort((a , b)=> a.localeCompare(b))// react select will automatically does the sorting
                 setSelectCity(sortedCities.map(city => ({value:city , label:city})))
                 // setSelectCity(response.data)

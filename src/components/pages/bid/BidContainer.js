@@ -10,7 +10,7 @@ import { useAuth } from "../../../contexts/AuthContext"
 import swal from 'sweetalert'
 import { newBidPlacedNotify } from "../../Notify";
 
-const socket = io('http://localhost:3000')
+const socket = io('http://localhost:4000')
 export default function BidContainer(){
     const [ previousBids , setPreviousBids ] = useState([])
     const { id }  = useParams()
@@ -21,7 +21,7 @@ export default function BidContainer(){
     useEffect(()=>{
         (async()=>{
             try{
-                const response = await axios.get(`http://localhost:3000/api/product/${id}/bids` , {
+                const response = await axios.get(`http://localhost:4000/api/product/${id}/bids` , {
                     headers:{
                         'Authorization':localStorage.getItem('token')
                     }
@@ -57,17 +57,13 @@ export default function BidContainer(){
             socket.emit('leaveProductRoom' , id)
         }
     } , [])
-    const updateLatestBids = (bidData)=>{
-        setPreviousBids(prevBid =>[...prevBid , bidData])
-    }
-    console.log('state ',previousBids)
     return (
         <div className="row mt-5">
             <div className="col-md-4">
                 <Bid product={product}/>
             </div>
             <div className="col-md-4">
-                <LiveBids productId={id} previousBids={previousBids} updateLatestBids={updateLatestBids}/>
+                <LiveBids productId={id} previousBids={previousBids} />
             </div>
             <div className="col-md-4">
                 <CountDownTimer biddingEnd={new Date(product?.biddingEnd)}/>

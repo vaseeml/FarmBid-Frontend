@@ -84,11 +84,10 @@ export default function CreateProfile() {
         formData.append('image', form.image);
         formData.append('description', form.description);
         try {
-            const response = await axios.post(`http://localhost:3000/api/profile`, formData, {
+            const response = await axios.post(`http://localhost:4000/api/profile`, formData, {
                 headers: { 'Authorization': localStorage.getItem('token') },
                 'Content-Type': 'multipart/form-data'
             })
-            console.log(response.data)
             dispatch(setProfile(response.data))
             profileCreatedNotify()
         } catch (err) {
@@ -126,11 +125,10 @@ export default function CreateProfile() {
             formData.append('image', form.image); // Keep the existing image if no new one is chosen
         }
         try {
-            const response = await axios.put(`http://localhost:3000/api/profile/${profile._id}`, formData, {
+            const response = await axios.put(`http://localhost:4000/api/profile/${profile._id}`, formData, {
                 headers: { 'Authorization': localStorage.getItem('token') },
                 'Content-Type': 'multipart/form-data'
             })
-            console.log(response.data)
             profileUpdateNotify()
             // dispatch(setProfile(response.data))
             // navigate('/login-sucess')
@@ -149,7 +147,7 @@ export default function CreateProfile() {
                 {profile && (
                     <Col md={6}>
                         <div className='position-relative'>
-                            <Image src={chosenFile ? URL.createObjectURL(chosenFile) : `http://localhost:3000/${profile.image}`} alt='img' height='500px' width='500px' roundedCircle />
+                            <Image src={chosenFile ? URL.createObjectURL(chosenFile) : `http://localhost:4000/${profile.image}`} alt='img' height='500px' width='500px' roundedCircle />
                             <Button variant='link'
                                 className='position-absolute bottom-0 end-1'
                                 onClick={handleEditImage}>Edit Image

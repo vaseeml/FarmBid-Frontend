@@ -27,16 +27,6 @@ registerPlugin(
   FilePondPluginImageCrop
 );
 export default function UpcomingProducts() {
-    const dispatch = useDispatch()
-    const navigate = useNavigate()
-    const { user } = useAuth()
-    const upcomingProducts = useSelector((state) => state.products?.upcomingProducts);
-    const serverError=useSelector((state)=>{
-        return state.products.serverErrors
-    })
-    const city = useSelector((state)=>{
-        return state.products.setCity
-    })
     const [modal, setModal] = useState(false);
     const [editId, setEditId] = useState('')
     const [ selectCity , setSelectCity ] = useState([])
@@ -52,8 +42,18 @@ export default function UpcomingProducts() {
         biddingStart: ''
     });
     const [ page , setPage ] = useState(1) // initial page number 
-    const [ isLoading , setIsLoading ] = useState(false)
+    // const [ isLoading , setIsLoading ] = useState(false)
     const limit = 8 // products per page
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+    const { user } = useAuth()
+    const upcomingProducts = useSelector((state) => state.products?.upcomingProducts);
+    const serverError=useSelector((state)=>{
+        return state.products.serverErrors
+    })
+    const city = useSelector((state)=>{
+        return state.products.setCity
+    })
     const filteredProducts = upcomingProducts.filter((ele)=>{
         if(city){
             return ele.cities == city
@@ -105,7 +105,6 @@ export default function UpcomingProducts() {
     
     const handleEdit = (id) => {
         const product = upcomingProducts.find((ele) => ele._id == id);
-        console.log(product)
         setForm({
             productName: product?.productName || '',
             stock: product?.stock || '',
@@ -122,13 +121,11 @@ export default function UpcomingProducts() {
         toggle();
     };
     const handleChange = (option) => {
-        console.log('option' ,option)
         setForm({...form,cities:option.value})
         };
     const handleDelete = async (id) => {
         const confirm = window.confirm(`Are You Sure ${user?.username}?`)
         if (confirm) {
-
             dispatch(setDeleteProduct(id))
         }
     };
@@ -164,7 +161,6 @@ export default function UpcomingProducts() {
         dispatch(startEditProduct(editId, formData))
         toggle()
     }else{
-        console.log('hi')
         setErrors(validationErrors)
     }
     }
@@ -177,7 +173,7 @@ export default function UpcomingProducts() {
                     user:user._id
                 }
                 // if buyer add item to cart
-                const response = await axios.post('http://localhost:3000/api/cart' ,formData, {
+                const response = await axios.post('http://localhost:4000/api/cart' ,formData, {
                     headers:{
                         'Authorization':localStorage.getItem('token')
                     }
@@ -216,7 +212,7 @@ export default function UpcomingProducts() {
     useEffect(()=>{
         (async()=>{
             try{
-                const response = await axios.get('http://localhost:3000/api/getcity')
+                const response = await axios.get('http://localhost:4000/api/getcity')
                 setSelectCity(response.data.map(city => ({value:city , label:city})))
             } catch(err){
                 console.log(err)
@@ -231,7 +227,6 @@ export default function UpcomingProducts() {
     } , [])
     useEffect(()=>{
         // setIsLoading(true)
-        console.log('useEffect is called for page request')
         dispatch(startGetUpComingProducts({role:user?.role , page:page , limit:limit}))
     }, [page])
     const handleScroll = ()=>{
@@ -240,22 +235,21 @@ export default function UpcomingProducts() {
             setPage(prev=>prev+1) // incrementing the page number
         }
     }
-    console.log('upcoming products ' , upcomingProducts)
     return (
         
-        <div>
-           <SearchCity />
+        <>
+           <SearchCity/>
             <Container>
                 <Row xs={1} md={4}>
                 {filteredProducts.map((ele) => (
                     <Col key={ele._id} >
-                       <Card className="bg-light mt-4 ml-4">
+                       <Card className="bg-light mt-4 ml-4" key={ele._id}>
                         <Carousel interval={3000} controls={false} indicators={false}>
                         
                             {ele.productImg.map((ele)=>{
                             return <Carousel.Item>
                                 <img
-                                src={`http://localhost:3000/${ele}`}
+                                src={`http://localhost:4000/${ele}`}
                                 alt="Product Image"
                                 height="250px"
                                 width="260px"
@@ -267,7 +261,7 @@ export default function UpcomingProducts() {
                         
                         <Carousel.Item>
                             <video autoPlay muted loop className="d-block w-100" style={{ height: '250px' }}>
-                            <source src={`http://localhost:3000/${ele.productVideo}`} type="video/mp4" />
+                            <source src={`http://localhost:4000/${ele.productVideo}`} type="video/mp4" />
                             </video>
                         </Carousel.Item>
                         </Carousel>
@@ -433,6 +427,6 @@ export default function UpcomingProducts() {
                     </Button>
                 </ModalFooter>
             </Modal>
-        </div>
+        </>
     );
 }

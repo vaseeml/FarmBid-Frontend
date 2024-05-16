@@ -9,7 +9,7 @@ export default function PaymentCancel(){
         (async()=>{
             try{
                 const stripeId = localStorage.getItem('stripeId')
-                await axios.put(`http://localhost:3000/api/failed-update/${stripeId}` , { paymentStatus:'failed'})
+                await axios.put(`http://localhost:4000/api/failed-update/${stripeId}` , { paymentStatus:'failed'})
                 alert('payment failed try again..!')
                 navigate('/live')
             } catch(err){

@@ -8,7 +8,7 @@ export default function Cart(){
         (async()=>{
             try{
                 // getting the cart items when page mounts
-                const response = await axios.get('http://localhost:3000/api/cart' , {
+                const response = await axios.get('http://localhost:4000/api/cart' , {
                     headers:{
                         'Authorization':localStorage.getItem('token')
                     }

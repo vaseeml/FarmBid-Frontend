@@ -11,6 +11,9 @@ const reducer = (state ,action)=>{
             // navigate('/live')
             return action.payload
         }
+        case 'REMOVE_USER_OBJ':{
+            return action.payload
+        }
         default:{
             return state
         }

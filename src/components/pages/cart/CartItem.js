@@ -10,7 +10,7 @@ export default function CartItem({ item , removeProduct}){
         if(confirm){
             try{
                 // making delete request of cart item
-                const response = await axios.delete(`http://localhost:3000/api/cart/${id}` , {
+                const response = await axios.delete(`http://localhost:4000/api/cart/${id}` , {
                     headers:{
                         'Authorization':localStorage.getItem('token')
                     }
@@ -28,7 +28,7 @@ export default function CartItem({ item , removeProduct}){
     return (
         <div className="col-md-4 mb-3">
         <div className="card">
-          <img src={`http://localhost:3000/${item.product?.productImg}`} 
+          <img src={`http://localhost:4000/${item.product?.productImg}`} 
             className="card-img-top"  
             height="300px"
             width="260px"

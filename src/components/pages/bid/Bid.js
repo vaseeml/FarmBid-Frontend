@@ -4,14 +4,14 @@ export default function Bid({product}){
         <div key={product?._id} className="col-md-4">
         <div>
         <img
-                src={`http://localhost:3000/${product?.productImg}`} alt='img'
+                src={`http://localhost:4000/${product?.productImg}`} alt='img'
                 height='300px' width='260px'
         />
         <div className="card-body"><h3 className="card-title">{product?.productName}</h3>
         {/* <video controls height='300px' width='260px'>
                 <source
                 key={product._id}
-                src={`http://localhost:3000/${product.productVideo}`}
+                src={`http://localhost:4000/${product.productVideo}`}
                 />
             </video> */}</div>
         </div>

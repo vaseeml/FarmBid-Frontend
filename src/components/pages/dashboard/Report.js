@@ -60,7 +60,7 @@ export default function Report(){
         form.productImage.forEach((image) => formData.append('productImage', image)); // Append each image
         // console.log('form/data' , formData)
         try{
-            const response = await axios.post('http://localhost:3000/api/reports', formData, {
+            const response = await axios.post('http://localhost:4000/api/reports', formData, {
                 headers: {
                     'Authorization': localStorage.getItem('token'),
                     'Content-Type': 'multipart/form-data'

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useSelector } from "react-redux";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper  } from '@mui/material';
@@ -13,7 +12,7 @@ export default function WalletTransactions() {
     useEffect(() => {
         (async () => {
             try {
-                const response = await axios.get(`http://localhost:3000/api/wallet-topup/${userWallet._id}/transactions`, {
+                const response = await axios.get(`http://localhost:4000/api/wallet-topup/${userWallet._id}/transactions`, {
                     headers: {
                         'Authorization': localStorage.getItem('token')
                     }

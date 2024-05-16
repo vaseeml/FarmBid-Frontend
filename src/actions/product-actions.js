@@ -12,7 +12,7 @@ export const getStartProduct = () => {
     return async (dispatch) => {
         try {
             // getting the products for common users
-            const response = await axios.get('http://localhost:3000/api/products')
+            const response = await axios.get('http://localhost:4000/api/products')
             dispatch(setProducts(response.data))
         } catch (err) {
             console.log(err)
@@ -25,7 +25,7 @@ export const startGetUpComingProducts = ({role , searchQuery , setCity, page , l
     return async(dispatch)=>{
         try{
             // getting upcoming products based on role
-            const response = await axios.get(`http://localhost:3000/api/products/upcoming?role=${role}&&search=${searchQuery?searchQuery :''}&&page=${page?page:1}&&limit=${limit?limit:8}` , {headers:{
+            const response = await axios.get(`http://localhost:4000/api/products/upcoming?role=${role}&&search=${searchQuery?searchQuery :''}&&page=${page?page:1}&&limit=${limit?limit:8}` , {headers:{
                 'Authorization':localStorage.getItem('token')
             }})
             // console.log(response.data)
@@ -45,7 +45,7 @@ export const startGetUpComingProducts = ({role , searchQuery , setCity, page , l
 export const startCreateProducts = (data,navigate) => {
     return async (dispatch) => {
         try {
-            const response = await axios.post('http://localhost:3000/api/create/product', data, {
+            const response = await axios.post('http://localhost:4000/api/create/product', data, {
                 headers: { 'Authorization': localStorage.getItem("token") }
             })
             productCreatedNotify()
@@ -90,15 +90,12 @@ export const setProducts = (data) => {
     }
 }
 export const getStartLiveProducts=({role , searchQuery , setCity , page , limit})=>{
-    console.log('city' , searchQuery)
-    console.log('page' , page , limit)
     return async(dispatch)=>{
         try{
             // getting live products based on role
-            const response = await axios.get(`http://localhost:3000/api/products/live?role=${role}&&search=${searchQuery?searchQuery :''}&&page=${page?page:1}&&limit=${limit?limit:8}`,{
+            const response = await axios.get(`http://localhost:4000/api/products/live?role=${role}&&search=${searchQuery?searchQuery :''}&&page=${page?page:1}&&limit=${limit?limit:8}`,{
                 headers:{'Authorization':localStorage.getItem('token')}
             })
-            console.log('populate' , response.data)
             // const filteredCity = response.data.filter((ele)=>{
             //     if(setCity){
             //         return ele.cities == setCity
@@ -123,7 +120,7 @@ export const getStartCompletedProducts=({role , searchQuery, page , limit })=>{
     return async(dispatch)=>{
         try{
             // getting completed products based on role
-            const response = await axios.get(`http://localhost:3000/api/products/completed?role=${role}&&search=${searchQuery?searchQuery:''}&&page=${page?page:1}&&limit=${limit?limit:8}`,{
+            const response = await axios.get(`http://localhost:4000/api/products/completed?role=${role}&&search=${searchQuery?searchQuery:''}&&page=${page?page:1}&&limit=${limit?limit:8}`,{
                 headers:{'Authorization':localStorage.getItem('token')}
             })
             dispatch(setCompletedProducts(response.data))
@@ -149,7 +146,7 @@ const setUpComingProducts = (data) => {
 export const setDeleteProduct = (id) => {
     return async (dispatch) => {
         try {
-            const response = await axios.delete(`http://localhost:3000/api/delete/${id}`, {
+            const response = await axios.delete(`http://localhost:4000/api/delete/${id}`, {
                 headers: { 'Authorization': localStorage.getItem("token") }
             })
             dispatch(deleteProduct(response.data))
@@ -167,9 +164,7 @@ const deleteProduct = (data) => {
 export const startEditProduct = (id, formData) => {
     return async (dispatch) => {
         try {
-            console.log('id', id)
-            console.log('form', formData)
-            const response = await axios.put(`http://localhost:3000/api/update/${id}`, formData, {
+            const response = await axios.put(`http://localhost:4000/api/update/${id}`, formData, {
                 headers: {
                     'Authorization': localStorage.getItem("token"),
                     'Content-Type': 'multipart/form-data'
@@ -225,33 +220,46 @@ export const removeProductFromLive = (product)=>{
 //     }
 // }
 
-export const searchQueryProducts=({role , searchQuery , setCity , page , limit})=>{
-    console.log('city' , searchQuery)
-    console.log('page' , page , limit)
+export const searchQueryProducts=({role , searchQuery , path , page , limit})=>{
     return async(dispatch)=>{
         try{
             // getting live products based on role
-            const response = await axios.get(`http://localhost:3000/api/products/live?role=${role}&&search=${searchQuery?searchQuery :''}&&page=${page?page:1}&&limit=${limit?limit:8}`,{
+            const response = await axios.get(`http://localhost:4000/api/products${path}?role=${role}&&search=${searchQuery?searchQuery :''}&&page=${page?page:1}&&limit=${limit?limit:8}`,{
                 headers:{'Authorization':localStorage.getItem('token')}
             })
-            console.log('search results' , response.data)
-            // const filteredCity = response.data.filter((ele)=>{
-            //     if(setCity){
-            //         return ele.cities == setCity
-            //     }else{
-            //         return ele
-            //     }
-            // })
-            dispatch(setSearchedProducts(response.data))
+            if(path == '/live'){
+                console.log('search results for live' , response.data)
+                dispatch(setSearchedLiveProducts(response.data))
+            }
+            if(path == '/upcoming'){
+                console.log('search results for upcoming' , response.data)
+                dispatch(setSearchedUpcomingProducts(response.data))
+            }
+            if(path == '/completed'){
+                console.log('search results for completed' , response.data)
+                dispatch(setSearchedCompletedProducts(response.data))
+            }
         } catch (err) {
             console.log(err)
         }
     }
 }
 
-const setSearchedProducts = (data)=>{
+const setSearchedLiveProducts = (data)=>{
     return {
-        type:'SET_SEARCH_PRODUCT',
+        type:'SET_SEARCH_LIVE_PRODUCT',
+        payload:data
+    }
+}
+const setSearchedUpcomingProducts = (data)=>{
+    return {
+        type:'SET_SEARCH__UPCOMING_PRODUCT',
+        payload:data
+    }
+}
+const setSearchedCompletedProducts = (data)=>{
+    return {
+        type:'SET_SEARCH_COMPLETED_PRODUCT',
         payload:data
     }
 }

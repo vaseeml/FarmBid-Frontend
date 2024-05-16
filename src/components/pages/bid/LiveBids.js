@@ -1,6 +1,5 @@
 import swal from 'sweetalert'
 import { useState } from 'react'
-import { Tooltip , OverlayTrigger } from 'react-bootstrap';
 import axios from 'axios'
 import io from 'socket.io-client'
 import { useAuth } from '../../../contexts/AuthContext'
@@ -8,23 +7,22 @@ import { useDispatch } from 'react-redux'
 import { setUpdateWallet } from '../../../actions/user-actions'
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
-import { useSelector } from 'react-redux'
+// import { useSelector } from 'react-redux'
 
-const socket = io('http://localhost:3000')
-export default function LiveBids({ productId ,previousBids, updateLatestBids}){
+const socket = io('http://localhost:4000')
+export default function LiveBids({ productId ,previousBids}){
     const [ number , setNumber ] = useState('')
     const [ serverErrors , setServerErrors ] = useState({}) 
     const [showModal, setShowModal] = useState(false)
     const [ profile , setProfile ] = useState(null)
-    const wallet = useSelector((state) => {
-        return state.user?.wallet
-    })
+    // const wallet = useSelector((state) => {
+    //     return state.user?.wallet
+    // })
     const handleBidderClick =async(id) => {
         // Show modal when bidder's name is clicked
         setShowModal(true)
         try{
-            const response = await axios.get(`http://localhost:3000/api/get/profileImage/${id}`)
-            console.log(response.data)
+            const response = await axios.get(`http://localhost:4000/api/get/profileImage/${id}`)
             setProfile(response.data)
         } catch(err){
             console.log(err)
@@ -51,7 +49,7 @@ export default function LiveBids({ productId ,previousBids, updateLatestBids}){
             }
             try{
                 // placing the bid 
-                const response = await axios.post('http://localhost:3000/api/bid' , formData , {headers:{ 'Authorization':localStorage.getItem('token')}})
+                const response = await axios.post('http://localhost:4000/api/bid' , formData , {headers:{ 'Authorization':localStorage.getItem('token')}})
                 // sending the data to product connected users
                 socket.emit('newBid' , response.data)
                 console.log('emit' , response.data)
@@ -106,7 +104,7 @@ export default function LiveBids({ productId ,previousBids, updateLatestBids}){
                 <Modal.Body style={{ display: 'flex', alignItems: 'center' }}>
                     {/* Profile Picture */}
                     <div style={{ marginRight: '20px' }}>
-                        <img src={`http://localhost:3000/${profile?.path}`} alt="Profile Pic" style={{ width: '100px', height: '100px', borderRadius: '50%' }} />
+                        <img src={`http://localhost:4000/${profile?.path}`} alt="Profile Pic" style={{ width: '100px', height: '100px', borderRadius: '50%' }} />
                     </div>
                     <div>
                         <h5>name - {profile?.name}</h5>
@@ -116,7 +114,7 @@ export default function LiveBids({ productId ,previousBids, updateLatestBids}){
                 </Modal.Body>
                 {/* <Modal.Body>
                 <div style={{ textAlign: 'center' }}>
-                    <img src={`http://localhost:3000/${profile?.path}`} alt="Profile Pic" style={{ width: '100px', height: '100px', borderRadius: '50%' }} />
+                    <img src={`http://localhost:4000/${profile?.path}`} alt="Profile Pic" style={{ width: '100px', height: '100px', borderRadius: '50%' }} />
                 </div>
                 <div style={{ textAlign: 'center', marginTop: '10px' }}>
                     <h5>{profile?.name}</h5>
