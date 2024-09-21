@@ -92,7 +92,7 @@ export default function LiveBids({ productId ,previousBids}){
         </div>
         {user?.role == 'buyer' && (
             <div >
-            <input type='number' value={number} onChange={(e)=>setNumber(e.target.value)} className='form-control'/>
+            <input type='number' value={number} onChange={(e)=>setNumber(e.target.value)} className='form-control' placeholder='place bid...'/>
             <button className="btn btn-success form-control" onClick={handleClick}>Bid</button>
             { Object.keys(serverErrors).length !== 0 && <p style={{color:'red'}}>{serverErrors.error}</p>}
             </div>

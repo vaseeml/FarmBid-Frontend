@@ -26,7 +26,7 @@ export default function CartItem({ item , removeProduct}){
         navigate(`/live/${productId}/bid`)
     }
     return (
-        <div className="col-md-4 mb-3">
+        <div className="col-md-3 mb-3">
         <div className="card">
           <img src={`http://localhost:4000/${item.product?.productImg}`} 
             className="card-img-top"  
@@ -37,9 +37,10 @@ export default function CartItem({ item , removeProduct}){
             <h5 className="card-title">{item.product?.productName}</h5>
             <p className="card-text">Stock: {item.product?.stock}</p>
             <p className="card-text">Base Price: {item.product?.basePrice}</p>
+            <p>You will be remainded when bid starts!</p>
             <button className="btn btn-danger" onClick={() => handleClick(item._id)}>Remove Cart</button>
             {/* <FaBell size={30} /> */}
-            <button className="btn btn-success" onClick={() => handleBid(item.product?._id)} disabled={item.product?.biddingStart > item.product?.biddingEnd}>Bid</button>
+            <button className="btn btn-success" onClick={() => handleBid(item.product?._id)} disabled={item.product?.biddingStart < item.product?.biddingEnd}>Bid</button>
           </div>
         </div>
       </div>

@@ -44,6 +44,7 @@ import Footer from './components/pages/home/Footer'
 import ViewReport from './components/pages/dashboard/ViewReports'
 import Report from './components/pages/dashboard/Report'
 import io from 'socket.io-client'
+import NotFound from './Private-Routes/NotFound'
 function App() {
   const location = useLocation()
   const [loggedIn, setLoggedIn] = useState(false)
@@ -207,6 +208,7 @@ function App() {
         <Route path='/report' element={<Report/>} />
         <Route path='/payment-success' element={<PaymentSuccess />} />
         <Route path='/payment-cancel' element={<PaymentCancel />} />
+        <Route exact path='*' element={<NotFound/>}/>
       </Routes>
       <ToastContainer />
       {/* <Footer/> */}

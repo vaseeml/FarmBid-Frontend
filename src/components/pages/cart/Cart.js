@@ -32,7 +32,7 @@ export default function Cart(){
     }
     return (
         <Container>
-        <h2>Shopping Cart</h2>
+        <h2>Wish List</h2>
         <Row xs={1} md={3}>
             {cart.map((item, index) => (
             <CartItem key={index} item={item} removeProduct={removeProduct} />

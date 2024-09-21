@@ -74,7 +74,7 @@ const LoginForm = ({ setUserLogin }) => {
   const initGoogleSignIn = async () => {
     try {
       await window.gapi.auth2?.init({
-        client_id: '242537127655-sgivplruev8nfu7gru7m01qslimqdj61.apps.googleusercontent.com',
+        client_id: clientId,
         scope: "email",
         plugin_name: 'FarmBid-Connect'
       })

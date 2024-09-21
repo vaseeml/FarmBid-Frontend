@@ -103,6 +103,7 @@ export const getStartLiveProducts=({role , searchQuery , setCity , page , limit}
             //         return ele
             //     }
             // })
+            console.log('ghelajd;lagha;lhgd;lajg' , response.data)
             dispatch(setLiveProducts(response.data))
         } catch (err) {
             console.log(err)

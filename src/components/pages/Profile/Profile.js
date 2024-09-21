@@ -147,7 +147,7 @@ export default function CreateProfile() {
                 {profile && (
                     <Col md={6}>
                         <div className='position-relative'>
-                            <Image src={chosenFile ? URL.createObjectURL(chosenFile) : `http://localhost:4000/${profile.image}`} alt='img' height='500px' width='500px' roundedCircle />
+                            <Image src={chosenFile ? URL.createObjectURL(chosenFile) : `http://localhost:4000/${profile.image}`} alt='img' height='400px' width='400px' roundedCircle  style={{marginTop:'100px'}}/>
                             <Button variant='link'
                                 className='position-absolute bottom-0 end-1'
                                 onClick={handleEditImage}>Edit Image
@@ -167,7 +167,7 @@ export default function CreateProfile() {
                 )}
                 <Col md={profile ? 6 : 12}>
                     {profile ? (
-                        <div>
+                        <div style={{marginTop:'100px'}}>
                             <div className="form-group">
                                 <label htmlFor="name">Name</label>
                                 <input
