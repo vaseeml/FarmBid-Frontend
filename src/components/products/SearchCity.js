@@ -2,7 +2,7 @@ import { useState,useEffect } from "react"
 import { useDispatch, useSelector } from 'react-redux'
 import axios from 'axios'
 import Select from 'react-select'
-import {Col } from "react-bootstrap"
+import {Col , Row , Container } from "react-bootstrap"
 import {  faLocationArrow } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { setSelectedCity } from "../../actions/product-actions"
@@ -32,7 +32,7 @@ export default function SearchCity(){
     return(
         <div className="d-flex align-items-center">
         <Col md={4}>
-            <h3>Select Region</h3>
+            <h5>Select Region</h5>
         </Col>
         <Col md={3}>
                     <Select
@@ -45,10 +45,34 @@ export default function SearchCity(){
         </Col>
         {city && (
           <Col md={5}>
-            <h3><FontAwesomeIcon style={{ marginLeft: '239px' }} icon={faLocationArrow}  />{city}</h3>
+            <h6><FontAwesomeIcon style={{ marginLeft: '239px' }} icon={faLocationArrow}  />{city}</h6>
             
             </Col>
         )}
     </div>
+    // <Container>
+    //         <Row className="w-100">
+    //             <Col md={4} className="d-flex justify-content-center align-items-center">
+    //                 <h5>Select Region</h5>
+    //             </Col>
+    //             <Col md={3} className="d-flex align-items-center">
+    //                 <Select
+    //                     options={selectCity}
+    //                     value={selectCity.value}
+    //                     onChange={handleChange}
+    //                     placeholder="Search for a district..."
+    //                     isSearchable
+    //                 />
+    //             </Col>
+    //             {city && (
+    //                 <Col md={5} className="d-flex justify-content-right align-items-center">
+    //                     <h6>
+    //                         <FontAwesomeIcon style={{ marginRight: '8px' }} icon={faLocationArrow} />
+    //                         {city}
+    //                     </h6>
+    //                 </Col>
+    //             )}
+    //         </Row>
+    //     </Container>
     )
 }

@@ -8,9 +8,9 @@ import { getStartCompletedProducts } from '../../actions/product-actions'
 export default function CompletedProducts(){
     const [showModal, setShowModal] = useState(false)
     const [ buyerInfo , setBuyerInfo ] = useState({})
-    const [displayImage, setDisplayImage] = useState(true)
+    // const [displayImage, setDisplayImage] = useState(true)
     const [ page , setPage ] = useState(1) // initial page number 
-    const [ isLoading , setIsLoading ] = useState(false)
+    // const [ isLoading , setIsLoading ] = useState(false)
     const limit = 8 // products per page
     const completedProducts = useSelector((state)=>{
         return state.products?.completedProducts
@@ -89,11 +89,11 @@ export default function CompletedProducts(){
                     style={{ height: '250px' }}
                   />
                 </Carousel.Item>
-                <Carousel.Item>
+                {/* <Carousel.Item>
                   <video controls autoPlay muted  className="d-block w-100" style={{ height: '250px' }}>
                     <source src={`http://localhost:4000/${ele.productVideo}`} type="video/mp4" />
                   </video>
-                </Carousel.Item>
+                </Carousel.Item> */}
               </Carousel>
               <Card.Body>
                 <Card.Title>Veg.Name: {ele.productName.toUpperCase()}</Card.Title>
@@ -107,16 +107,16 @@ export default function CompletedProducts(){
       }
        <Modal show={showModal} onHide={() => setShowModal(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Bidder Info  {user?._id == buyerInfo?.bidder?._id ? <p className='btn btn-success'>Won</p>:<p className='btn btn-danger'>Lost</p>}</Modal.Title>
+          <Modal.Title>Bidder Info {user?.role ==='buyer' ? (user?._id == buyerInfo?.bidder?._id ? <p className='btn btn-success'>Won</p>:<p className='btn btn-danger'>Lost</p>):''}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-            <div>
+            {buyerInfo ?<div>
               <p>Bidder Name: {buyerInfo.bidder?.username}</p>
               {/* <p>Email: {buyerInfo.bidder?.email}</p> */}
               { user?._id == buyerInfo?.bidder?._id &&<span style={{color:'yellow' , backgroundColor:'black'}}>Order Id: {buyerInfo._id}</span>}
               <p>Last Bid: {buyerInfo.bidAmount}</p>
               <p>Bid Date: {handleTimeShow(buyerInfo.createdAt)}</p>
-            </div>
+            </div>:<p>No Bids Placed!</p>}
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowModal(false)}>Close</Button>

@@ -61,7 +61,7 @@ export default function LiveProducts(){
     return (
         <>
         <SearchCity/>
-        { products.length !== 0 ?<Container>
+        { filteredProducts.length !== 0 ?<Container>
             <Row xs={1} md={4}>
                 {filteredProducts.map((ele) => (
                     <Col key={ele._id}>
@@ -132,7 +132,15 @@ export default function LiveProducts(){
                 </Col>
                 ))}
             </Row>
-        </Container>:<h4>No Products/Vegetable found</h4>}
+        </Container>:<div style={{
+                textAlign: 'center',
+                padding: '20px',
+                border: '1px solid #ccc',
+                borderRadius: '10px',
+                boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)'
+            }}>
+                <h4>No products found on this city</h4>
+            </div>}
         </>
     )
 }
